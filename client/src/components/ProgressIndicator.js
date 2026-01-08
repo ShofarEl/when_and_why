@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ProgressIndicator = ({ currentPhase, phases, currentCondition, totalConditions }) => {
   const getPhaseLabel = (phase) => {
     switch (phase) {
@@ -84,9 +82,47 @@ const ProgressIndicator = ({ currentPhase, phases, currentCondition, totalCondit
           )}
         </div>
         
-        <div className="relative">
+        {/* Mobile Progress - Vertical Layout */}
+        <div className="block md:hidden">
+          <div className="space-y-3">
+            {phases.map((phase, index) => (
+              <div key={phase} className="flex items-center space-x-3">
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 flex-shrink-0 ${
+                    index < currentPhaseIndex
+                      ? 'bg-emerald-600 text-white shadow-lg'
+                      : index === currentPhaseIndex
+                      ? 'bg-slate-600 text-white shadow-lg ring-2 ring-slate-200'
+                      : 'bg-slate-100 text-slate-400'
+                  }`}
+                >
+                  {index < currentPhaseIndex ? (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    getPhaseIcon(phase)
+                  )}
+                </div>
+                <div className="flex-1">
+                  <span className={`text-sm font-medium ${
+                    index <= currentPhaseIndex ? 'text-slate-700' : 'text-slate-400'
+                  }`}>
+                    {getPhaseLabel(phase)}
+                  </span>
+                  {index === currentPhaseIndex && (
+                    <div className="text-xs text-slate-500 mt-1">Current Step</div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop Progress - Horizontal Layout */}
+        <div className="hidden md:block relative overflow-x-auto">
           {/* Progress Line */}
-          <div className="absolute top-4 md:top-6 left-4 md:left-6 right-4 md:right-6 h-0.5 bg-slate-200">
+          <div className="absolute top-6 left-12 right-12 h-0.5 bg-slate-200">
             <div 
               className="h-full bg-slate-600 transition-all duration-500 ease-out"
               style={{ width: `${(currentPhaseIndex / (phases.length - 1)) * 100}%` }}
@@ -94,35 +130,37 @@ const ProgressIndicator = ({ currentPhase, phases, currentCondition, totalCondit
           </div>
           
           {/* Phase Steps */}
-          <div className="flex justify-between">
+          <div className="flex justify-between items-start">
             {phases.map((phase, index) => (
-              <div key={phase} className="flex flex-col items-center relative z-10">
+              <div key={phase} className="flex flex-col items-center relative z-10 flex-1">
                 <div
-                  className={`w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-xs md:text-sm font-medium transition-all duration-300 ${
+                  className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 mb-3 ${
                     index < currentPhaseIndex
                       ? 'bg-emerald-600 text-white shadow-lg scale-110'
                       : index === currentPhaseIndex
-                      ? 'bg-slate-600 text-white shadow-lg scale-110 ring-2 md:ring-4 ring-slate-200'
+                      ? 'bg-slate-600 text-white shadow-lg scale-110 ring-4 ring-slate-200'
                       : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
                   }`}
                 >
                   {index < currentPhaseIndex ? (
-                    <svg className="w-3 h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   ) : (
                     getPhaseIcon(phase)
                   )}
                 </div>
-                <span className={`text-xs md:text-sm mt-1 md:mt-2 text-center font-medium transition-colors duration-300 leading-tight ${
-                  index <= currentPhaseIndex ? 'text-slate-700' : 'text-slate-400'
-                }`}>
-                  {getPhaseLabel(phase)}
-                </span>
+                <div className="text-center px-2">
+                  <span className={`text-sm font-medium transition-colors duration-300 leading-tight block ${
+                    index <= currentPhaseIndex ? 'text-slate-700' : 'text-slate-400'
+                  }`}>
+                    {getPhaseLabel(phase)}
+                  </span>
+                </div>
                 
                 {/* Current phase indicator */}
                 {index === currentPhaseIndex && (
-                  <div className="absolute -bottom-1 md:-bottom-2 w-1.5 h-1.5 md:w-2 md:h-2 bg-slate-600 rounded-full animate-bounce"></div>
+                  <div className="absolute -bottom-2 w-2 h-2 bg-slate-600 rounded-full animate-bounce"></div>
                 )}
               </div>
             ))}

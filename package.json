@@ -1,7 +1,7 @@
 {
-  "name": "ai-data-science-study-server",
+  "name": "insight-ai-server",
   "version": "1.0.0",
-  "description": "Backend server for AI-assisted data science problem framing study",
+  "description": "iNSIGHT AI - Backend server for AI-assisted data science problem framing study",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js"
