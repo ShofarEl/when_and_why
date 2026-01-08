@@ -82,7 +82,7 @@ const ConsentForm = ({ onConsent }) => {
                 <h3 className="font-semibold text-sm md:text-base text-slate-800">AI Interaction</h3>
               </div>
               <p className="text-xs md:text-sm text-slate-600">
-                This study uses GPT-3.5 to generate suggestions. You'll be clearly informed when 
+                This study uses GPT-4.0 to generate suggestions. You'll be clearly informed when 
                 interacting with AI. Content is for research purposes only.
               </p>
             </div>

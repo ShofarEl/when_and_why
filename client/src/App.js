@@ -7,6 +7,7 @@ import TransferTasks from './components/TransferTasks';
 import PostStudySurvey from './components/PostStudySurvey';
 import ProgressIndicator from './components/ProgressIndicator';
 import DataExport from './components/DataExport';
+import Preloader from './components/Preloader';
 
 const API_BASE = process.env.NODE_ENV === 'production' 
   ? 'https://whenandwhy-production.up.railway.app/api' 
@@ -17,6 +18,8 @@ function App() {
   const [participantId, setParticipantId] = useState(null);
   const [conditionOrder, setConditionOrder] = useState([]);
   const [currentConditionIndex, setCurrentConditionIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('Loading...');
 
   // Phase progression
   const phases = [
@@ -30,30 +33,47 @@ function App() {
   ];
 
   const createParticipant = async () => {
+    setIsLoading(true);
+    setLoadingMessage('Creating participant...');
     try {
       const response = await axios.post(`${API_BASE}/participants/create`);
       setParticipantId(response.data.participantId);
       setConditionOrder(response.data.conditionOrder);
+      setIsLoading(false);
       return response.data.participantId;
     } catch (error) {
       console.error('Error creating participant:', error);
+      setIsLoading(false);
       alert('Error starting study. Please refresh and try again.');
     }
   };
 
   const nextPhase = () => {
-    const currentIndex = phases.indexOf(currentPhase);
-    if (currentIndex < phases.length - 1) {
-      setCurrentPhase(phases[currentIndex + 1]);
-    }
+    setIsLoading(true);
+    setLoadingMessage('Loading next phase...');
+    
+    // Add a small delay to show the loader, then transition
+    setTimeout(() => {
+      const currentIndex = phases.indexOf(currentPhase);
+      if (currentIndex < phases.length - 1) {
+        setCurrentPhase(phases[currentIndex + 1]);
+      }
+      setIsLoading(false);
+    }, 500);
   };
 
   const nextCondition = () => {
-    if (currentConditionIndex < conditionOrder.length - 1) {
-      setCurrentConditionIndex(currentConditionIndex + 1);
-    } else {
-      nextPhase(); // Move to transfer tasks
-    }
+    setIsLoading(true);
+    setLoadingMessage('Loading next task...');
+    
+    setTimeout(() => {
+      if (currentConditionIndex < conditionOrder.length - 1) {
+        setCurrentConditionIndex(currentConditionIndex + 1);
+      } else {
+        nextPhase(); // Move to transfer tasks
+      }
+      setIsLoading(false);
+    }, 300);
   };
 
   const renderCurrentPhase = () => {
@@ -231,6 +251,8 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <Preloader isLoading={isLoading} message={loadingMessage} />
+      
       <div className="container mx-auto px-2 sm:px-4 py-4 md:py-6 lg:py-8">
         <header className="text-center mb-6 md:mb-8 lg:mb-12">
           <div className="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-white rounded-xl md:rounded-2xl mb-4 md:mb-6 shadow-lg border border-slate-200">

@@ -88,7 +88,7 @@ const ProgressIndicator = ({ currentPhase, phases, currentCondition, totalCondit
             {phases.map((phase, index) => (
               <div key={phase} className="flex items-center space-x-3">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300 flex-shrink-0 ${
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-150 flex-shrink-0 ${
                     index < currentPhaseIndex
                       ? 'bg-emerald-600 text-white shadow-lg'
                       : index === currentPhaseIndex
@@ -124,7 +124,7 @@ const ProgressIndicator = ({ currentPhase, phases, currentCondition, totalCondit
           {/* Progress Line */}
           <div className="absolute top-6 left-12 right-12 h-0.5 bg-slate-200">
             <div 
-              className="h-full bg-slate-600 transition-all duration-500 ease-out"
+              className="h-full bg-slate-600 transition-all duration-300 ease-out"
               style={{ width: `${(currentPhaseIndex / (phases.length - 1)) * 100}%` }}
             />
           </div>
@@ -134,7 +134,7 @@ const ProgressIndicator = ({ currentPhase, phases, currentCondition, totalCondit
             {phases.map((phase, index) => (
               <div key={phase} className="flex flex-col items-center relative z-10 flex-1">
                 <div
-                  className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 mb-3 ${
+                  className={`w-10 h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-150 mb-3 ${
                     index < currentPhaseIndex
                       ? 'bg-emerald-600 text-white shadow-lg scale-110'
                       : index === currentPhaseIndex
@@ -151,7 +151,7 @@ const ProgressIndicator = ({ currentPhase, phases, currentCondition, totalCondit
                   )}
                 </div>
                 <div className="text-center px-2">
-                  <span className={`text-sm font-medium transition-colors duration-300 leading-tight block ${
+                  <span className={`text-sm font-medium transition-colors duration-150 leading-tight block ${
                     index <= currentPhaseIndex ? 'text-slate-700' : 'text-slate-400'
                   }`}>
                     {getPhaseLabel(phase)}
