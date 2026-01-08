@@ -1,0 +1,6 @@
+client/
+README.md
+RAILWAY_DEPLOYMENT.md
+build.sh
+.git/
+.gitignore
