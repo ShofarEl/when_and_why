@@ -307,30 +307,30 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-4 lg:p-6">
+    <div className="max-w-6xl mx-auto p-2 sm:p-4 lg:p-6">
       {/* Task Header - Mobile Optimized */}
-      <div className="bg-white p-4 lg:p-6 rounded-lg shadow-sm mb-4 lg:mb-6">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
-          <div className="flex items-center space-x-3 mb-3 sm:mb-0">
-            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-slate-600 rounded-xl flex items-center justify-center">
-              <span className="text-white text-lg lg:text-xl font-bold">{taskNumber}</span>
+      <div className="bg-white p-3 md:p-4 lg:p-6 rounded-lg shadow-sm mb-3 md:mb-4 lg:mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 md:mb-4">
+          <div className="flex items-center space-x-2 md:space-x-3 mb-2 sm:mb-0">
+            <div className="w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-slate-600 rounded-lg md:rounded-xl flex items-center justify-center">
+              <span className="text-white text-sm md:text-lg lg:text-xl font-bold">{taskNumber}</span>
             </div>
-            <h2 className="text-xl lg:text-2xl font-bold text-slate-800">
+            <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-slate-800">
               Task {taskNumber} of {totalTasks}
             </h2>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+          <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 md:space-x-4">
             <div className={`flex items-center justify-center sm:justify-start space-x-2 ${timeLeft < 120 ? 'text-red-600' : 'text-gray-600'}`}>
-              <Clock size={20} />
-              <span className="font-mono text-xl lg:text-2xl font-bold">{formatTime(timeLeft)}</span>
+              <Clock size={16} className="md:w-5 md:h-5" />
+              <span className="font-mono text-base md:text-xl lg:text-2xl font-bold">{formatTime(timeLeft)}</span>
             </div>
             {condition.timing === 'jit' && (
               <button
                 onClick={() => requestAiHelp()}
                 disabled={isLoadingAI}
-                className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-blue-600 text-white px-4 py-3 rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-all duration-200 font-medium"
+                className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-blue-600 text-white px-3 md:px-4 py-2 md:py-3 rounded-lg md:rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-all duration-200 font-medium text-sm md:text-base"
               >
-                <HelpCircle size={18} />
+                <HelpCircle size={16} className="md:w-5 md:h-5" />
                 <span>{isLoadingAI ? 'Loading...' : 'Get AI Help'}</span>
               </button>
             )}
@@ -338,18 +338,18 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
         </div>
 
         {/* Dataset Info - Mobile Optimized */}
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-4 lg:p-6">
-          <div className="flex items-start space-x-4">
-            <div className="w-12 h-12 lg:w-14 lg:h-14 bg-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0">
-              <svg className="w-6 h-6 lg:w-7 lg:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-lg md:rounded-2xl p-3 md:p-4 lg:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-4">
+            <div className="w-10 h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 bg-blue-600 rounded-lg md:rounded-2xl flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg lg:text-xl font-bold text-slate-800 mb-3 leading-tight">{dataset.title}</h3>
-              <p className="text-sm lg:text-base text-slate-600 mb-4 leading-relaxed">{dataset.description}</p>
-              <div className="bg-white/80 rounded-xl p-4 border border-blue-100">
-                <p className="text-sm lg:text-base text-slate-700">
+              <h3 className="text-base md:text-lg lg:text-xl font-bold text-slate-800 mb-2 md:mb-3 leading-tight">{dataset.title}</h3>
+              <p className="text-xs md:text-sm lg:text-base text-slate-600 mb-3 md:mb-4 leading-relaxed">{dataset.description}</p>
+              <div className="bg-white/80 rounded-lg md:rounded-xl p-3 md:p-4 border border-blue-100">
+                <p className="text-xs md:text-sm lg:text-base text-slate-700">
                   <span className="font-semibold text-blue-700">Your Goal:</span> Generate creative research questions and project ideas for this dataset. Think about interesting patterns, relationships, or insights you could explore.
                 </p>
               </div>
@@ -359,49 +359,49 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
       </div>
 
       {/* Main Content Grid - Responsive Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
         {/* Main Input Area */}
         <div className="lg:col-span-2">
-          <div className="bg-white p-4 lg:p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-white p-3 md:p-4 lg:p-6 rounded-lg md:rounded-2xl shadow-sm border border-slate-100">
+            <div className="flex items-center space-x-2 md:space-x-3 mb-4 md:mb-6">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-emerald-100 rounded-lg md:rounded-xl flex items-center justify-center">
+                <svg className="w-4 h-4 md:w-5 md:h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-slate-800">Your Ideas</h3>
+              <h3 className="text-base md:text-lg lg:text-xl font-semibold text-slate-800">Your Ideas</h3>
             </div>
             
             {/* Ideas List - Mobile Optimized */}
-            <div className="space-y-3 mb-6 max-h-64 lg:max-h-80 overflow-y-auto">
+            <div className="space-y-2 md:space-y-3 mb-4 md:mb-6 max-h-48 md:max-h-64 lg:max-h-80 overflow-y-auto">
               {ideas.map((idea, index) => (
-                <div key={idea.id} className="p-4 bg-slate-50 rounded-xl border-l-4 border-emerald-500 transition-all duration-200 hover:shadow-sm">
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="text-sm font-semibold text-emerald-700 bg-emerald-100 px-2 py-1 rounded-lg">
+                <div key={idea.id} className="p-3 md:p-4 bg-slate-50 rounded-lg md:rounded-xl border-l-4 border-emerald-500 transition-all duration-200 hover:shadow-sm">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 gap-2 sm:gap-0">
+                    <span className="text-xs md:text-sm font-semibold text-emerald-700 bg-emerald-100 px-2 py-1 rounded-lg w-fit">
                       Idea {index + 1}
                     </span>
-                    <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded-lg">
+                    <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded-lg w-fit">
                       {new Date(idea.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
-                  <p className="text-sm lg:text-base text-slate-700 leading-relaxed">{idea.content}</p>
+                  <p className="text-xs md:text-sm lg:text-base text-slate-700 leading-relaxed">{idea.content}</p>
                 </div>
               ))}
               {ideas.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="text-center py-8 md:py-12">
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                    <svg className="w-6 h-6 md:w-8 md:h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                   </div>
-                  <p className="text-slate-500 text-base lg:text-lg mb-2">No ideas yet</p>
-                  <p className="text-slate-400 text-sm">Start by typing your first research question below</p>
+                  <p className="text-slate-500 text-sm md:text-base lg:text-lg mb-2">No ideas yet</p>
+                  <p className="text-slate-400 text-xs md:text-sm">Start by typing your first research question below</p>
                 </div>
               )}
             </div>
 
             {/* Input Area - Mobile Optimized */}
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               <textarea
                 value={currentIdea}
                 onChange={(e) => {
@@ -409,14 +409,14 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
                   setLastActivityTime(Date.now());
                 }}
                 placeholder="Type your research question or project idea here..."
-                className="w-full p-4 border-2 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base lg:text-lg resize-none transition-all duration-200"
-                rows={4}
+                className="w-full p-3 md:p-4 border-2 border-slate-200 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm md:text-base lg:text-lg resize-none transition-all duration-200"
+                rows={3}
                 disabled={taskCompleted}
               />
               <button
                 onClick={handleIdeaSubmit}
                 disabled={!currentIdea.trim() || taskCompleted}
-                className="w-full bg-emerald-600 text-white py-4 rounded-xl hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="w-full bg-emerald-600 text-white py-3 md:py-4 rounded-lg md:rounded-xl hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm md:text-base lg:text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 Submit Idea
               </button>
@@ -426,41 +426,41 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
 
         {/* AI Suggestions Sidebar - Always visible on desktop, mobile card on mobile */}
         <div className="lg:col-span-1">
-          <div className="bg-white p-4 lg:p-6 rounded-2xl shadow-sm border border-slate-200 lg:sticky lg:top-4">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-white p-3 md:p-4 lg:p-6 rounded-lg md:rounded-2xl shadow-sm border border-slate-200 lg:sticky lg:top-4">
+            <div className="flex items-center space-x-2 md:space-x-3 mb-4 md:mb-6">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-amber-100 rounded-lg md:rounded-xl flex items-center justify-center">
+                <svg className="w-4 h-4 md:w-5 md:h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </div>
-              <h3 className="text-lg lg:text-xl font-semibold text-slate-800">AI Suggestions</h3>
+              <h3 className="text-base md:text-lg lg:text-xl font-semibold text-slate-800">AI Suggestions</h3>
             </div>
             
             {/* Always-On Mode: Show suggestions in sidebar on desktop, mobile gets them too */}
             {condition.timing === 'always_on' ? (
               <>
                 {isLoadingAI ? (
-                  <div className="text-center py-12">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p className="text-slate-500 text-base">Generating suggestions...</p>
+                  <div className="text-center py-8 md:py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 md:h-12 md:w-12 border-b-2 border-blue-600 mx-auto mb-3 md:mb-4"></div>
+                    <p className="text-slate-500 text-xs md:text-base">Generating suggestions...</p>
                   </div>
                 ) : aiSuggestions.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-3 md:space-y-4">
                     {aiSuggestions.map(suggestion => (
-                      <div key={suggestion.id} className="p-4 bg-amber-50 rounded-xl border border-amber-200 transition-all duration-200 hover:shadow-sm">
-                        <p className="text-sm lg:text-base mb-4 text-slate-700 leading-relaxed">{suggestion.content}</p>
+                      <div key={suggestion.id} className="p-3 md:p-4 bg-amber-50 rounded-lg md:rounded-xl border border-amber-200 transition-all duration-200 hover:shadow-sm">
+                        <p className="text-xs md:text-sm lg:text-base mb-3 md:mb-4 text-slate-700 leading-relaxed">{suggestion.content}</p>
                         <div className="flex flex-col sm:flex-row gap-2">
                           <button
                             onClick={() => handleSuggestionAction(suggestion, 'accepted')}
                             disabled={suggestion.accepted || suggestion.dismissed}
-                            className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm transition-all duration-200"
+                            className="flex-1 bg-blue-600 text-white px-3 md:px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-xs md:text-sm transition-all duration-200"
                           >
                             {suggestion.accepted ? '✓ Used' : 'Use This'}
                           </button>
                           <button
                             onClick={() => handleSuggestionAction(suggestion, 'dismissed')}
                             disabled={suggestion.accepted || suggestion.dismissed}
-                            className="flex-1 bg-slate-400 text-white px-4 py-2 rounded-lg hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm transition-all duration-200"
+                            className="flex-1 bg-slate-400 text-white px-3 md:px-4 py-2 rounded-lg hover:bg-slate-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-xs md:text-sm transition-all duration-200"
                           >
                             {suggestion.dismissed ? '✗ Dismissed' : 'Dismiss'}
                           </button>
@@ -469,27 +469,27 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="text-center py-8 md:py-12">
+                    <div className="w-12 h-12 md:w-16 md:h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                      <svg className="w-6 h-6 md:w-8 md:h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                       </svg>
                     </div>
-                    <p className="text-slate-500 text-base mb-2">AI suggestions will appear here</p>
-                    <p className="text-slate-400 text-sm">Automatically generated to help spark ideas</p>
+                    <p className="text-slate-500 text-xs md:text-base mb-2">AI suggestions will appear here</p>
+                    <p className="text-slate-400 text-xs md:text-sm">Automatically generated to help spark ideas</p>
                   </div>
                 )}
               </>
             ) : (
               /* JIT Mode: Show help instructions in sidebar, modal for suggestions */
-              <div className="text-center py-12">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="text-center py-8 md:py-12">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+                  <svg className="w-6 h-6 md:w-8 md:h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <p className="text-slate-500 text-base mb-2">Click "Get AI Help" for suggestions</p>
-                <p className="text-slate-400 text-sm">Or wait 60 seconds after inactivity</p>
+                <p className="text-slate-500 text-xs md:text-base mb-2">Click "Get AI Help" for suggestions</p>
+                <p className="text-slate-400 text-xs md:text-sm">Or wait 60 seconds after inactivity</p>
               </div>
             )}
           </div>
@@ -498,39 +498,39 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
 
       {/* JIT Suggestions Modal - Mobile Optimized */}
       {condition.timing === 'jit' && showAiSuggestions && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white p-6 border-b border-slate-200 rounded-t-2xl">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg md:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white p-4 md:p-6 border-b border-slate-200 rounded-t-lg md:rounded-t-2xl">
               <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center">
-                    <Lightbulb size={20} className="text-yellow-600" />
+                <div className="flex items-center space-x-2 md:space-x-3">
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-yellow-100 rounded-lg md:rounded-xl flex items-center justify-center">
+                    <Lightbulb size={16} className="md:w-5 md:h-5 text-yellow-600" />
                   </div>
-                  <h3 className="text-xl font-semibold text-slate-800">AI Suggestions</h3>
+                  <h3 className="text-lg md:text-xl font-semibold text-slate-800">AI Suggestions</h3>
                 </div>
                 <button
                   onClick={() => setShowAiSuggestions(false)}
-                  className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-700 hover:bg-slate-200 transition-all duration-200"
+                  className="w-8 h-8 md:w-10 md:h-10 bg-slate-100 rounded-lg md:rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-700 hover:bg-slate-200 transition-all duration-200"
                 >
-                  <X size={20} />
+                  <X size={16} className="md:w-5 md:h-5" />
                 </button>
               </div>
             </div>
             
-            <div className="p-6 space-y-4">
+            <div className="p-4 md:p-6 space-y-3 md:space-y-4">
               {aiSuggestions.map(suggestion => (
-                <div key={suggestion.id} className="p-4 bg-yellow-50 rounded-xl border border-yellow-200">
-                  <p className="text-base mb-4 text-slate-700 leading-relaxed">{suggestion.content}</p>
-                  <div className="flex flex-col sm:flex-row gap-3">
+                <div key={suggestion.id} className="p-3 md:p-4 bg-yellow-50 rounded-lg md:rounded-xl border border-yellow-200">
+                  <p className="text-sm md:text-base mb-3 md:mb-4 text-slate-700 leading-relaxed">{suggestion.content}</p>
+                  <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
                     <button
                       onClick={() => handleSuggestionAction(suggestion, 'accepted')}
-                      className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 font-semibold transition-all duration-200"
+                      className="flex-1 bg-blue-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl hover:bg-blue-700 font-semibold text-sm md:text-base transition-all duration-200"
                     >
                       Use This Idea
                     </button>
                     <button
                       onClick={() => handleSuggestionAction(suggestion, 'dismissed')}
-                      className="flex-1 bg-slate-400 text-white px-6 py-3 rounded-xl hover:bg-slate-500 font-semibold transition-all duration-200"
+                      className="flex-1 bg-slate-400 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl hover:bg-slate-500 font-semibold text-sm md:text-base transition-all duration-200"
                     >
                       Not Helpful
                     </button>
@@ -544,43 +544,43 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
 
       {/* Rationale Modal - Mobile Optimized */}
       {showRationale && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <h3 className="text-xl font-semibold mb-4 text-slate-800">Explain Your Reasoning</h3>
-              <p className="text-base text-slate-600 mb-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg md:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-4 md:p-6">
+              <h3 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-slate-800">Explain Your Reasoning</h3>
+              <p className="text-sm md:text-base text-slate-600 mb-3 md:mb-4">
                 Please explain your reasoning for this idea (minimum 20 characters):
               </p>
-              <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <p className="text-sm text-slate-500 mb-1">Your idea:</p>
-                <p className="text-base font-medium text-slate-800">{pendingIdea}</p>
+              <div className="mb-4 md:mb-6 p-3 md:p-4 bg-slate-50 rounded-lg md:rounded-xl border border-slate-200">
+                <p className="text-xs md:text-sm text-slate-500 mb-1">Your idea:</p>
+                <p className="text-sm md:text-base font-medium text-slate-800">{pendingIdea}</p>
               </div>
               <textarea
                 value={rationale}
                 onChange={(e) => setRationale(e.target.value)}
                 placeholder="Explain why you think this is a good research question or project idea..."
-                className="w-full p-4 border-2 border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base resize-none"
-                rows={5}
+                className="w-full p-3 md:p-4 border-2 border-slate-200 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm md:text-base resize-none"
+                rows={4}
               />
-              <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
-                <span className="text-sm text-slate-500 order-2 sm:order-1">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-4 md:mt-6 gap-3">
+                <span className="text-xs md:text-sm text-slate-500 order-2 sm:order-1">
                   {rationale.length}/20 characters minimum
                 </span>
-                <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto order-1 sm:order-2">
+                <div className="flex flex-col sm:flex-row gap-2 md:gap-3 w-full sm:w-auto order-1 sm:order-2">
                   <button
                     onClick={() => {
                       setShowRationale(false);
                       setPendingIdea('');
                       setRationale('');
                     }}
-                    className="px-6 py-3 bg-slate-400 text-white rounded-xl hover:bg-slate-500 font-semibold transition-all duration-200"
+                    className="px-4 md:px-6 py-2.5 md:py-3 bg-slate-400 text-white rounded-lg md:rounded-xl hover:bg-slate-500 font-semibold text-sm md:text-base transition-all duration-200"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleRationaleSubmit}
                     disabled={rationale.length < 20}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 font-semibold transition-all duration-200"
+                    className="px-4 md:px-6 py-2.5 md:py-3 bg-blue-600 text-white rounded-lg md:rounded-xl hover:bg-blue-700 disabled:opacity-50 font-semibold text-sm md:text-base transition-all duration-200"
                   >
                     Submit Idea
                   </button>
@@ -593,10 +593,10 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
 
       {/* Task Complete Button - Mobile Optimized */}
       {!taskCompleted && (
-        <div className="mt-8 text-center">
+        <div className="mt-6 md:mt-8 text-center">
           <button
             onClick={completeTask}
-            className="bg-red-600 text-white px-8 py-4 rounded-xl hover:bg-red-700 font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="bg-red-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg md:rounded-xl hover:bg-red-700 font-semibold text-sm md:text-base lg:text-lg transition-all duration-200 shadow-lg hover:shadow-xl w-full sm:w-auto"
           >
             Finish Task Early
           </button>

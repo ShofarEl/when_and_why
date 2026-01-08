@@ -90,37 +90,37 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-        <div className="bg-blue-700 px-8 py-6">
+    <div className="max-w-4xl mx-auto px-2 sm:px-4">
+      <div className="bg-white/90 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+        <div className="bg-blue-700 px-4 md:px-6 lg:px-8 py-4 md:py-6">
           <div className="flex items-center">
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-lg md:rounded-xl flex items-center justify-center mr-3 md:mr-4">
+              <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">Pre-Study Survey</h2>
-              <p className="text-blue-100">Tell us about yourself and your background</p>
+              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white">Pre-Study Survey</h2>
+              <p className="text-xs sm:text-sm md:text-base text-blue-100">Tell us about yourself and your background</p>
             </div>
           </div>
         </div>
         
-        <form onSubmit={handleSubmit} className="p-8 space-y-8">
+        <form onSubmit={handleSubmit} className="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8">
           {/* Demographics Section */}
-          <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 border border-gray-100">
-            <div className="flex items-center mb-6">
-              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center mr-3">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl md:rounded-2xl p-4 md:p-6 border border-gray-100">
+            <div className="flex items-center mb-4 md:mb-6">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-600 rounded-lg md:rounded-xl flex items-center justify-center mr-2 md:mr-3">
+                <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-800">Demographics</h3>
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800">Demographics</h3>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
                   Age *
                 </label>
                 <input
@@ -129,13 +129,13 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
                   max="100"
                   value={formData.age}
                   onChange={(e) => handleInputChange('age', parseInt(e.target.value))}
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 ${
+                  className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 text-sm md:text-base ${
                     errors.age ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                   }`}
                   placeholder="Enter your age"
                 />
-                {errors.age && <p className="text-red-500 text-sm mt-1 flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {errors.age && <p className="text-red-500 text-xs md:text-sm mt-1 flex items-center">
+                  <svg className="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   {errors.age}
@@ -143,13 +143,13 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
                   Gender *
                 </label>
                 <select
                   value={formData.gender}
                   onChange={(e) => handleInputChange('gender', e.target.value)}
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 ${
+                  className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 text-sm md:text-base ${
                     errors.gender ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                   }`}
                 >
@@ -159,8 +159,8 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
                   <option value="non-binary">Non-binary</option>
                   <option value="prefer-not-to-say">Prefer not to say</option>
                 </select>
-                {errors.gender && <p className="text-red-500 text-sm mt-1 flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {errors.gender && <p className="text-red-500 text-xs md:text-sm mt-1 flex items-center">
+                  <svg className="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   {errors.gender}
@@ -168,13 +168,13 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
                   Academic Level *
                 </label>
                 <select
                   value={formData.academicLevel}
                   onChange={(e) => handleInputChange('academicLevel', e.target.value)}
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 ${
+                  className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 text-sm md:text-base ${
                     errors.academicLevel ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                   }`}
                 >
@@ -184,8 +184,8 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
                   <option value="phd">PhD Student</option>
                   <option value="other">Other</option>
                 </select>
-                {errors.academicLevel && <p className="text-red-500 text-sm mt-1 flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {errors.academicLevel && <p className="text-red-500 text-xs md:text-sm mt-1 flex items-center">
+                  <svg className="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   {errors.academicLevel}
@@ -193,7 +193,7 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
                   Major/Program *
                 </label>
                 <input
@@ -201,12 +201,12 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
                   value={formData.major}
                   onChange={(e) => handleInputChange('major', e.target.value)}
                   placeholder="e.g., Computer Science, Data Science, etc."
-                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 ${
+                  className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 text-sm md:text-base ${
                     errors.major ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                   }`}
                 />
-                {errors.major && <p className="text-red-500 text-sm mt-1 flex items-center">
-                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {errors.major && <p className="text-red-500 text-xs md:text-sm mt-1 flex items-center">
+                  <svg className="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   {errors.major}
@@ -216,23 +216,23 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
           </div>
 
           {/* Experience Section */}
-          <div className="bg-blue-50 rounded-2xl p-6 border border-blue-100">
-            <div className="flex items-center mb-6">
-              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center mr-3">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-blue-50 rounded-xl md:rounded-2xl p-4 md:p-6 border border-blue-100">
+            <div className="flex items-center mb-4 md:mb-6">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-600 rounded-lg md:rounded-xl flex items-center justify-center mr-2 md:mr-3">
+                <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-slate-800">Experience & Background</h3>
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-slate-800">Experience & Background</h3>
             </div>
             
-            <div className="space-y-6">
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+            <div className="space-y-4 md:space-y-6">
+              <div className="bg-white rounded-lg md:rounded-xl p-4 md:p-6 shadow-sm border border-gray-100">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2 md:mb-3">
                   Rate your familiarity with data science concepts
                 </label>
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-500 font-medium">Not familiar</span>
+                <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                  <span className="text-xs md:text-sm text-gray-500 font-medium">Not familiar</span>
                   <div className="flex-1 relative">
                     <input
                       type="range"
@@ -246,19 +246,19 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
                       {[1,2,3,4,5,6,7].map(n => <span key={n}>{n}</span>)}
                     </div>
                   </div>
-                  <span className="text-sm text-gray-500 font-medium">Very familiar</span>
-                  <div className="ml-4 bg-blue-100 px-3 py-1 rounded-full">
-                    <span className="text-sm font-bold text-blue-700">{formData.dataScienceFamiliarity}</span>
+                  <span className="text-xs md:text-sm text-gray-500 font-medium">Very familiar</span>
+                  <div className="bg-blue-100 px-2 md:px-3 py-1 rounded-full">
+                    <span className="text-xs md:text-sm font-bold text-blue-700">{formData.dataScienceFamiliarity}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
+              <div className="bg-white rounded-lg md:rounded-xl p-4 md:p-6 shadow-sm border border-gray-100">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2 md:mb-3">
                   Rate your experience with AI tools (ChatGPT, etc.)
                 </label>
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-500 font-medium">No experience</span>
+                <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                  <span className="text-xs md:text-sm text-gray-500 font-medium">No experience</span>
                   <div className="flex-1 relative">
                     <input
                       type="range"
@@ -272,27 +272,27 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
                       {[1,2,3,4,5,6,7].map(n => <span key={n}>{n}</span>)}
                     </div>
                   </div>
-                  <span className="text-sm text-gray-500 font-medium">Very experienced</span>
-                  <div className="ml-4 bg-blue-100 px-3 py-1 rounded-full">
-                    <span className="text-sm font-bold text-blue-700">{formData.aiExperience}</span>
+                  <span className="text-xs md:text-sm text-gray-500 font-medium">Very experienced</span>
+                  <div className="bg-blue-100 px-2 md:px-3 py-1 rounded-full">
+                    <span className="text-xs md:text-sm font-bold text-blue-700">{formData.aiExperience}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                <label className="block text-sm font-semibold text-gray-700 mb-4">
+              <div className="bg-white rounded-lg md:rounded-xl p-4 md:p-6 shadow-sm border border-gray-100">
+                <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-3 md:mb-4">
                   Which courses have you completed? (Check all that apply)
                 </label>
-                <div className="grid md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                   {courses.map(course => (
-                    <label key={course} className="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200">
+                    <label key={course} className="flex items-center p-2 md:p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200">
                       <input
                         type="checkbox"
                         checked={formData.priorCourses.includes(course)}
                         onChange={(e) => handleCourseChange(course, e.target.checked)}
-                        className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
+                        className="h-4 w-4 md:h-5 md:w-5 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
                       />
-                      <span className="ml-3 text-sm font-medium text-gray-700">{course}</span>
+                      <span className="ml-2 md:ml-3 text-xs md:text-sm font-medium text-gray-700">{course}</span>
                     </label>
                   ))}
                 </div>
@@ -300,12 +300,12 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
             </div>
           </div>
 
-          <div className="flex justify-center pt-4">
+          <div className="flex justify-center pt-2 md:pt-4">
             <button
               type="submit"
-              className="inline-flex items-center px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 bg-blue-600 text-white font-semibold text-sm md:text-base rounded-lg md:rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl w-full sm:w-auto"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
               Continue to Tutorial

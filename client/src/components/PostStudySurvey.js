@@ -104,33 +104,33 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
-        <div className="bg-blue-700 px-8 py-6">
+    <div className="max-w-4xl mx-auto px-2 sm:px-4">
+      <div className="bg-white/90 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+        <div className="bg-blue-700 px-4 md:px-6 lg:px-8 py-4 md:py-6">
           <div className="flex items-center">
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-lg md:rounded-xl flex items-center justify-center mr-3 md:mr-4">
+              <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
               </svg>
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">Final Survey</h2>
-              <p className="text-blue-100">Share your thoughts about the different AI assistance conditions</p>
+              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white">Final Survey</h2>
+              <p className="text-xs sm:text-sm md:text-base text-blue-100">Share your thoughts about the different AI assistance conditions</p>
             </div>
           </div>
         </div>
 
-        <div className="p-8">
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 mb-8 border border-green-100">
+        <div className="p-4 md:p-6 lg:p-8">
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg md:rounded-xl p-4 md:p-6 mb-6 md:mb-8 border border-green-100">
             <div className="flex items-center mb-2">
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center mr-3">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-6 h-6 md:w-8 md:h-8 bg-green-600 rounded-lg flex items-center justify-center mr-2 md:mr-3">
+                <svg className="w-3 h-3 md:w-4 md:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-gray-800">Congratulations!</h3>
+              <h3 className="font-semibold text-sm md:text-base text-gray-800">Congratulations!</h3>
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-xs md:text-sm text-gray-600">
               You've completed all experimental tasks! Please share your thoughts about the different 
               AI assistance conditions you experienced.
             </p>
