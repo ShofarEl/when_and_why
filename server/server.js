@@ -16,8 +16,21 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// CORS configuration
+const corsOptions = {
+  origin: [
+    'https://when-and-why.vercel.app',
+    'http://localhost:3000', // for development
+    process.env.CLIENT_URL
+  ].filter(Boolean), // Remove any undefined values
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -33,19 +46,19 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-// Routes
+// API Routes
 app.use('/api/participants', require('./routes/participants'));
 app.use('/api/ai', require('./routes/ai'));
 app.use('/api/data', require('./routes/data'));
 
-// Serve static files from React build
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'client/build')));
-  
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build/index.html'));
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'AI-Assisted Data Science Study API',
+    status: 'running',
+    frontend: 'https://when-and-why.vercel.app'
   });
-}
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

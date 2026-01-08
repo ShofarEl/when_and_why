@@ -8,7 +8,9 @@ import PostStudySurvey from './components/PostStudySurvey';
 import ProgressIndicator from './components/ProgressIndicator';
 import DataExport from './components/DataExport';
 
-const API_BASE = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5000/api';
+const API_BASE = process.env.NODE_ENV === 'production' 
+  ? 'https://whenandwhy-production.up.railway.app/api' 
+  : 'http://localhost:5000/api';
 
 function App() {
   const [currentPhase, setCurrentPhase] = useState('consent');

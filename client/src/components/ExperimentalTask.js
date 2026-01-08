@@ -3,7 +3,9 @@ import axios from 'axios';
 import { Clock, HelpCircle, Lightbulb, X } from 'lucide-react';
 import PostTaskQuestionnaire from './PostTaskQuestionnaire';
 
-const API_BASE = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5000/api';
+const API_BASE = process.env.NODE_ENV === 'production' 
+  ? 'https://whenandwhy-production.up.railway.app/api' 
+  : 'http://localhost:5000/api';
 
 const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, onComplete }) => {
   const [dataset, setDataset] = useState(null);

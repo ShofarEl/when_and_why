@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const API_BASE = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5000/api';
+const API_BASE = process.env.NODE_ENV === 'production' 
+  ? 'https://whenandwhy-production.up.railway.app/api' 
+  : 'http://localhost:5000/api';
 
 const PreStudySurvey = ({ participantId, onComplete }) => {
   const [formData, setFormData] = useState({
