@@ -83,7 +83,25 @@ const TransferTasks = ({ participantId, onComplete }) => {
         taskNumber: currentTask,
         questionnaire: responses,
         ideas: currentTask === 1 ? task1Ideas : task2Ideas,
-        completionTime: Math.round((Date.now() - taskStartTime) / 10
+        completionTime: Math.round((Date.now() - taskStartTime) / 1000)
+      });
+
+      setShowQuestionnaire(false);
+      setCurrentTaskComplete(false);
+
+      if (currentTask === 1) {
+        // Move to task 2
+        setCurrentTask(2);
+        startTask();
+      } else {
+        // Complete all tasks
+        completeAllTasks();
+      }
+    } catch (error) {
+      console.error('Error saving questionnaire:', error);
+      alert('Error saving data. Please try again.');
+    }
+  }, [currentTask, task1Ideas, task2Ideas, taskStartTime, participantId, startTask, completeAllTasks]);
 
   // Effects after function definitions
   useEffect(() => {
@@ -182,6 +200,14 @@ const TransferTasks = ({ participantId, onComplete }) => {
 
   return (
     <div className="max-w-5xl mx-auto px-2 sm:px-4">
+      {showQuestionnaire && (
+        <StandardizedPostTaskQuestionnaire
+          onComplete={handleQuestionnaireComplete}
+          taskType="transfer"
+          taskNumber={currentTask}
+        />
+      )}
+      
       <div className="bg-white/90 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-xl border border-white/20 overflow-hidden">
         <div className="bg-gradient-to-r from-amber-600 to-orange-600 px-4 md:px-6 lg:px-8 py-4 md:py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
