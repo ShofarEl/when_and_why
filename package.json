@@ -4,7 +4,8 @@
   "description": "iNSIGHT AI - Backend server for AI-assisted data science problem framing study",
   "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "build": "echo 'No build step required for backend'"
   },
   "engines": {
     "node": ">=16.0.0"
