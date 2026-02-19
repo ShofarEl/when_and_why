@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { Clock, HelpCircle, Lightbulb, X } from 'lucide-react';
 import PostTaskQuestionnaire from './PostTaskQuestionnaire';
@@ -33,7 +33,15 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
       if (timerRef.current) clearInterval(timerRef.current);
       if (activityTimerRef.current) clearInterval(activityTimerRef.current);
     };
-  }, []);
+  }, [initializeTask]);
+
+  // Separate effect for initial AI suggestions in Always-On mode
+  useEffect(() => {
+    if (taskStarted && condition.timing === 'always_on') {
+      const timeout = setTimeout(() => generateAiSuggestions(), 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [taskStarted, condition.timing, generateAiSuggestions]);
 
   useEffect(() => {
     if (taskStarted && !taskCompleted) {
@@ -64,7 +72,7 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
         if (activityTimerRef.current) clearInterval(activityTimerRef.current);
       };
     }
-  }, [taskStarted, taskCompleted, lastActivityTime, showAiSuggestions, ideas.length]);
+  }, [taskStarted, taskCompleted, lastActivityTime, showAiSuggestions, ideas.length, completeTask, condition.timing, requestAiHelp]);
 
   useEffect(() => {
     // Always-On mode: refresh suggestions periodically
@@ -77,9 +85,9 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
       
       return () => clearInterval(interval);
     }
-  }, [condition.timing, taskStarted, taskCompleted, isLoadingAI]);
+  }, [condition.timing, taskStarted, taskCompleted, isLoadingAI, generateAiSuggestions]);
 
-  const initializeTask = async () => {
+  const initializeTask = useCallback(async () => {
     try {
       // Get dataset info
       const datasetResponse = await axios.get(`${API_BASE}/ai/datasets/${condition.taskId}`);
@@ -96,18 +104,13 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
       logInteraction('task_start', { condition, taskId: condition.taskId });
 
       setTaskStarted(true);
-
-      // For Always-On mode, generate initial suggestions
-      if (condition.timing === 'always_on') {
-        setTimeout(() => generateAiSuggestions(), 2000);
-      }
     } catch (error) {
       console.error('Error initializing task:', error);
       alert('Error loading task. Please refresh and try again.');
     }
-  };
+  }, [participantId, condition]);
 
-  const logInteraction = async (action, details = {}) => {
+  const logInteraction = useCallback(async (action, details = {}) => {
     try {
       await axios.post(`${API_BASE}/participants/${participantId}/sessions/${sessionId}/interactions`, {
         action,
@@ -116,9 +119,9 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
     } catch (error) {
       console.error('Error logging interaction:', error);
     }
-  };
+  }, [participantId, sessionId]);
 
-  const generateAiSuggestions = async (isAutoTrigger = false) => {
+  const generateAiSuggestions = useCallback(async (isAutoTrigger = false) => {
     if (isLoadingAI) return;
     
     setIsLoadingAI(true);
@@ -170,12 +173,12 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
     } finally {
       setIsLoadingAI(false);
     }
-  };
+  }, [isLoadingAI, condition.taskId, condition.timing, ideas, participantId, logInteraction]);
 
-  const requestAiHelp = (isAutoTrigger = false) => {
+  const requestAiHelp = useCallback((isAutoTrigger = false) => {
     logInteraction('help_request', { isAutoTrigger });
     generateAiSuggestions(isAutoTrigger);
-  };
+  }, [logInteraction, generateAiSuggestions]);
 
   const handleIdeaSubmit = () => {
     if (!currentIdea.trim()) return;
@@ -248,7 +251,7 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
     }
   };
 
-  const completeTask = () => {
+  const completeTask = useCallback(() => {
     if (taskCompleted) return;
     
     setTaskCompleted(true);
@@ -262,7 +265,7 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
     });
 
     setShowQuestionnaire(true);
-  };
+  }, [taskCompleted, ideas.length, timeLeft, condition, logInteraction]);
 
   const handleQuestionnaireComplete = async (responses) => {
     try {

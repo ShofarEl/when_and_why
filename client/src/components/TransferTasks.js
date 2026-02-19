@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 
 const API_BASE = process.env.NODE_ENV === 'production' 
@@ -41,7 +41,7 @@ const TransferTasks = ({ participantId, onComplete }) => {
         if (timerRef.current) clearInterval(timerRef.current);
       };
     }
-  }, [taskStartTime]);
+  }, [taskStartTime, handleTaskComplete]);
 
   const loadDatasets = async () => {
     try {
@@ -52,10 +52,10 @@ const TransferTasks = ({ participantId, onComplete }) => {
     }
   };
 
-  const startTask = () => {
+  const startTask = useCallback(() => {
     setTaskStartTime(Date.now());
     setTimeLeft(300); // Reset to 5 minutes
-  };
+  }, []);
 
   const getCurrentDataset = () => {
     // Use datasets 5 and 6 for transfer tasks
@@ -85,7 +85,7 @@ const TransferTasks = ({ participantId, onComplete }) => {
     setCurrentIdea('');
   };
 
-  const handleTaskComplete = () => {
+  const handleTaskComplete = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
@@ -98,9 +98,9 @@ const TransferTasks = ({ participantId, onComplete }) => {
       // Complete all transfer tasks
       completeAllTasks();
     }
-  };
+  }, [currentTask, startTask, completeAllTasks]);
 
-  const completeAllTasks = async () => {
+  const completeAllTasks = useCallback(async () => {
     try {
       const transferData = {
         transferTasks: [
@@ -130,7 +130,7 @@ const TransferTasks = ({ participantId, onComplete }) => {
       console.error('Error saving transfer tasks:', error);
       alert('Error saving data. Please try again.');
     }
-  };
+  }, [task1Ideas, task2Ideas, taskStartTime, participantId, onComplete]);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
