@@ -43,7 +43,7 @@ const datasets = {
 // Generate AI suggestions
 router.post('/suggestions', async (req, res) => {
   try {
-    const { taskId, existingIdeas, participantId } = req.body;
+    const { taskId, existingIdeas, participantId, refinementRequest, interactionHistory } = req.body;
     
     if (!datasets[taskId]) {
       return res.status(400).json({ error: 'Invalid task ID' });
@@ -54,6 +54,20 @@ router.post('/suggestions', async (req, res) => {
       ? existingIdeas.map(idea => `- ${idea}`).join('\n')
       : 'None yet';
     
+    // Build context from interaction history
+    const interactionContext = interactionHistory && interactionHistory.length > 0
+      ? `\n\nPrevious interaction context:\n${interactionHistory.slice(-3).map(i => 
+          `- ${i.type}: ${i.refinementRequest || 'Generated suggestions'}`
+        ).join('\n')}`
+      : '';
+    
+    // Handle refinement requests
+    let refinementPrompt = '';
+    if (refinementRequest) {
+      refinementPrompt = `\n\nUser's refinement request: "${refinementRequest}"
+Please adjust your suggestions based on this feedback.`;
+    }
+    
     const prompt = `You are helping a data science student practice problem framing.
 
 Dataset: ${dataset.title}
@@ -61,9 +75,19 @@ Description: ${dataset.description}
 Available variables: ${dataset.variables.join(', ')}
 
 Student's existing ideas:
-${existingIdeasText}
+${existingIdeasText}${interactionContext}${refinementPrompt}
 
-Provide 2-3 additional creative research questions or project ideas that explore different angles of this dataset. Format each as a brief suggestion (1-2 sentences). Focus on encouraging exploration of relationships between variables, potential insights, or practical applications. Avoid repeating similar ideas to what the student already proposed.
+${existingIdeas && existingIdeas.length > 0 
+  ? `Based on the student's existing ideas${refinementRequest ? ' and their feedback' : ''}, provide 2-3 suggestions that either:
+1. Refine or extend their current ideas with more specific approaches
+2. Suggest complementary angles that build on their thinking
+3. Propose methodological improvements or additional variables to consider
+
+Focus on helping them develop their own thinking rather than replacing it.`
+  : `Provide 2-3 creative research questions or project ideas that explore different angles of this dataset. Focus on encouraging exploration of relationships between variables, potential insights, or practical applications.`
+}
+
+Format each as a brief suggestion (1-2 sentences). Make suggestions actionable and specific to help guide their research direction.
 
 Format your response as a simple list with each suggestion on a new line starting with "- ".`;
 
@@ -72,7 +96,7 @@ Format your response as a simple list with each suggestion on a new line startin
       messages: [
         {
           role: "system",
-          content: "You are a helpful assistant for data science education. Provide creative, diverse research ideas that encourage student exploration."
+          content: "You are a helpful assistant for data science education. Provide creative, diverse research ideas that encourage student exploration and build upon their existing thinking."
         },
         {
           role: "user", 
