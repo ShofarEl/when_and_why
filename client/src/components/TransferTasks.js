@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
+import StandardizedPostTaskQuestionnaire from './StandardizedPostTaskQuestionnaire';
 
 const API_BASE = process.env.NODE_ENV === 'production' 
-  ? 'https://whenandwhy-production.up.railway.app/api' 
+  ? 'https://when-why-1.onrender.com/api' 
   : 'http://localhost:5000/api';
 
 const TransferTasks = ({ participantId, onComplete }) => {
@@ -14,6 +15,8 @@ const TransferTasks = ({ participantId, onComplete }) => {
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes per task
   const [taskStartTime, setTaskStartTime] = useState(null);
   const [allTasksComplete, setAllTasksComplete] = useState(false);
+  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
+  const [currentTaskComplete, setCurrentTaskComplete] = useState(false);
 
   const timerRef = useRef(null);
 
@@ -69,15 +72,18 @@ const TransferTasks = ({ participantId, onComplete }) => {
       clearInterval(timerRef.current);
     }
 
-    if (currentTask === 1) {
-      // Move to task 2
-      setCurrentTask(2);
-      startTask();
-    } else {
-      // Complete all transfer tasks
-      completeAllTasks();
-    }
-  }, [currentTask, startTask, completeAllTasks]);
+    setCurrentTaskComplete(true);
+    setShowQuestionnaire(true);
+  }, []);
+
+  const handleQuestionnaireComplete = useCallback(async (responses) => {
+    try {
+      // Save questionnaire data for this transfer task
+      await axios.post(`${API_BASE}/participants/${participantId}/transfer-questionnaire`, {
+        taskNumber: currentTask,
+        questionnaire: responses,
+        ideas: currentTask === 1 ? task1Ideas : task2Ideas,
+        completionTime: Math.round((Date.now() - taskStartTime) / 10
 
   // Effects after function definitions
   useEffect(() => {

@@ -4,7 +4,7 @@ import { Clock, HelpCircle, Lightbulb, X } from 'lucide-react';
 import PostTaskQuestionnaire from './PostTaskQuestionnaire';
 
 const API_BASE = process.env.NODE_ENV === 'production' 
-  ? 'https://whenandwhy-production.up.railway.app/api' 
+  ? 'https://when-why-1.onrender.com/api' 
   : 'http://localhost:5000/api';
 
 const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, onComplete }) => {

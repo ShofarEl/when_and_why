@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 
 const API_BASE = process.env.NODE_ENV === 'production' 
-  ? 'https://whenandwhy-production.up.railway.app/api' 
+  ? 'https://when-why-1.onrender.com/api' 
   : 'http://localhost:5000/api';
 
 const PostStudySurvey = ({ participantId, onComplete }) => {
