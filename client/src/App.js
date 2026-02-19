@@ -10,7 +10,7 @@ import DataExport from './components/DataExport';
 import Preloader from './components/Preloader';
 
 const API_BASE = process.env.NODE_ENV === 'production' 
-  ? 'https://whenandwhy-production.up.railway.app/api' 
+  ? 'https://your-app-name.onrender.com/api' 
   : 'http://localhost:5000/api';
 
 function App() {
