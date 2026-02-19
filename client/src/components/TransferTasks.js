@@ -16,7 +16,6 @@ const TransferTasks = ({ participantId, onComplete }) => {
   const [taskStartTime, setTaskStartTime] = useState(null);
   const [allTasksComplete, setAllTasksComplete] = useState(false);
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
-  const [currentTaskComplete, setCurrentTaskComplete] = useState(false);
 
   const timerRef = useRef(null);
 
@@ -72,7 +71,6 @@ const TransferTasks = ({ participantId, onComplete }) => {
       clearInterval(timerRef.current);
     }
 
-    setCurrentTaskComplete(true);
     setShowQuestionnaire(true);
   }, []);
 
@@ -87,7 +85,6 @@ const TransferTasks = ({ participantId, onComplete }) => {
       });
 
       setShowQuestionnaire(false);
-      setCurrentTaskComplete(false);
 
       if (currentTask === 1) {
         // Move to task 2
