@@ -269,22 +269,6 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
     }
   };
 
-  const completeTask = useCallback(() => {
-    if (taskCompleted) return;
-    
-    setTaskCompleted(true);
-    if (timerRef.current) clearInterval(timerRef.current);
-    if (activityTimerRef.current) clearInterval(activityTimerRef.current);
-    
-    logInteraction('task_complete', { 
-      totalIdeas: ideas.length,
-      timeSpent: 600 - timeLeft,
-      condition
-    });
-
-    setShowQuestionnaire(true);
-  }, [taskCompleted, ideas.length, timeLeft, condition, logInteraction]);
-
   const handleQuestionnaireComplete = async (responses) => {
     try {
       // Update session with questionnaire responses
