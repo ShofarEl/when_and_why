@@ -27,89 +27,7 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
   const timerRef = useRef(null);
   const activityTimerRef = useRef(null);
 
-  useEffect(() => {
-    initializeTask();
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-      if (activityTimerRef.current) clearInterval(activityTimerRef.current);
-    };
-  }, [initializeTask]);
-
-  // Separate effect for initial AI suggestions in Always-On mode
-  useEffect(() => {
-    if (taskStarted && condition.timing === 'always_on') {
-      const timeout = setTimeout(() => generateAiSuggestions(), 2000);
-      return () => clearTimeout(timeout);
-    }
-  }, [taskStarted, condition.timing, generateAiSuggestions]);
-
-  useEffect(() => {
-    if (taskStarted && !taskCompleted) {
-      // Main timer
-      timerRef.current = setInterval(() => {
-        setTimeLeft(prev => {
-          if (prev <= 1) {
-            completeTask();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      // Activity monitoring for JIT trigger
-      if (condition.timing === 'jit') {
-        activityTimerRef.current = setInterval(() => {
-          const timeSinceActivity = Date.now() - lastActivityTime;
-          if (timeSinceActivity >= 60000 && !showAiSuggestions && ideas.length > 0) {
-            // Auto-trigger JIT help after 60 seconds of inactivity
-            requestAiHelp(true);
-          }
-        }, 5000);
-      }
-
-      return () => {
-        if (timerRef.current) clearInterval(timerRef.current);
-        if (activityTimerRef.current) clearInterval(activityTimerRef.current);
-      };
-    }
-  }, [taskStarted, taskCompleted, lastActivityTime, showAiSuggestions, ideas.length, completeTask, condition.timing, requestAiHelp]);
-
-  useEffect(() => {
-    // Always-On mode: refresh suggestions periodically
-    if (condition.timing === 'always_on' && taskStarted && !taskCompleted) {
-      const interval = setInterval(() => {
-        if (!isLoadingAI) {
-          generateAiSuggestions();
-        }
-      }, 20000);
-      
-      return () => clearInterval(interval);
-    }
-  }, [condition.timing, taskStarted, taskCompleted, isLoadingAI, generateAiSuggestions]);
-
-  const initializeTask = useCallback(async () => {
-    try {
-      // Get dataset info
-      const datasetResponse = await axios.get(`${API_BASE}/ai/datasets/${condition.taskId}`);
-      setDataset(datasetResponse.data);
-
-      // Create session
-      const sessionResponse = await axios.post(`${API_BASE}/participants/${participantId}/sessions`, {
-        condition,
-        taskId: condition.taskId
-      });
-      setSessionId(sessionResponse.data.sessionId);
-
-      // Log task start
-      logInteraction('task_start', { condition, taskId: condition.taskId });
-
-      setTaskStarted(true);
-    } catch (error) {
-      console.error('Error initializing task:', error);
-      alert('Error loading task. Please refresh and try again.');
-    }
-  }, [participantId, condition]);
-
+  // Define all functions first
   const logInteraction = useCallback(async (action, details = {}) => {
     try {
       await axios.post(`${API_BASE}/participants/${participantId}/sessions/${sessionId}/interactions`, {
@@ -179,6 +97,106 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
     logInteraction('help_request', { isAutoTrigger });
     generateAiSuggestions(isAutoTrigger);
   }, [logInteraction, generateAiSuggestions]);
+
+  const completeTask = useCallback(() => {
+    if (taskCompleted) return;
+    
+    setTaskCompleted(true);
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (activityTimerRef.current) clearInterval(activityTimerRef.current);
+    
+    logInteraction('task_complete', { 
+      totalIdeas: ideas.length,
+      timeSpent: 600 - timeLeft,
+      condition
+    });
+
+    setShowQuestionnaire(true);
+  }, [taskCompleted, ideas.length, timeLeft, condition, logInteraction]);
+
+  const initializeTask = useCallback(async () => {
+    try {
+      // Get dataset info
+      const datasetResponse = await axios.get(`${API_BASE}/ai/datasets/${condition.taskId}`);
+      setDataset(datasetResponse.data);
+
+      // Create session
+      const sessionResponse = await axios.post(`${API_BASE}/participants/${participantId}/sessions`, {
+        condition,
+        taskId: condition.taskId
+      });
+      setSessionId(sessionResponse.data.sessionId);
+
+      // Log task start
+      logInteraction('task_start', { condition, taskId: condition.taskId });
+
+      setTaskStarted(true);
+    } catch (error) {
+      console.error('Error initializing task:', error);
+      alert('Error loading task. Please refresh and try again.');
+    }
+  }, [participantId, condition, logInteraction]);
+
+  // Effects after function definitions
+  useEffect(() => {
+    initializeTask();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (activityTimerRef.current) clearInterval(activityTimerRef.current);
+    };
+  }, [initializeTask]);
+
+  // Separate effect for initial AI suggestions in Always-On mode
+  useEffect(() => {
+    if (taskStarted && condition.timing === 'always_on') {
+      const timeout = setTimeout(() => generateAiSuggestions(), 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [taskStarted, condition.timing, generateAiSuggestions]);
+
+  useEffect(() => {
+    if (taskStarted && !taskCompleted) {
+      // Main timer
+      timerRef.current = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            completeTask();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      // Activity monitoring for JIT trigger
+      if (condition.timing === 'jit') {
+        activityTimerRef.current = setInterval(() => {
+          const timeSinceActivity = Date.now() - lastActivityTime;
+          if (timeSinceActivity >= 60000 && !showAiSuggestions && ideas.length > 0) {
+            // Auto-trigger JIT help after 60 seconds of inactivity
+            requestAiHelp(true);
+          }
+        }, 5000);
+      }
+
+      return () => {
+        if (timerRef.current) clearInterval(timerRef.current);
+        if (activityTimerRef.current) clearInterval(activityTimerRef.current);
+      };
+    }
+  }, [taskStarted, taskCompleted, lastActivityTime, showAiSuggestions, ideas.length, completeTask, condition.timing, requestAiHelp]);
+
+  useEffect(() => {
+    // Always-On mode: refresh suggestions periodically
+    if (condition.timing === 'always_on' && taskStarted && !taskCompleted) {
+      const interval = setInterval(() => {
+        if (!isLoadingAI) {
+          generateAiSuggestions();
+        }
+      }, 20000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [condition.timing, taskStarted, taskCompleted, isLoadingAI, generateAiSuggestions]);
 
   const handleIdeaSubmit = () => {
     if (!currentIdea.trim()) return;

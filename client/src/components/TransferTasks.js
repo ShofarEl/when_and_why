@@ -17,88 +17,20 @@ const TransferTasks = ({ participantId, onComplete }) => {
 
   const timerRef = useRef(null);
 
-  useEffect(() => {
-    loadDatasets();
-    startTask();
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (taskStartTime) {
-      timerRef.current = setInterval(() => {
-        setTimeLeft(prev => {
-          if (prev <= 1) {
-            handleTaskComplete();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => {
-        if (timerRef.current) clearInterval(timerRef.current);
-      };
-    }
-  }, [taskStartTime, handleTaskComplete]);
-
-  const loadDatasets = async () => {
+  // Define all functions first
+  const loadDatasets = useCallback(async () => {
     try {
       const response = await axios.get(`${API_BASE}/ai/datasets`);
       setDatasets(response.data);
     } catch (error) {
       console.error('Error loading datasets:', error);
     }
-  };
+  }, []);
 
   const startTask = useCallback(() => {
     setTaskStartTime(Date.now());
     setTimeLeft(300); // Reset to 5 minutes
   }, []);
-
-  const getCurrentDataset = () => {
-    // Use datasets 5 and 6 for transfer tasks
-    const taskId = currentTask === 1 ? 5 : 6;
-    return datasets[taskId];
-  };
-
-  const getCurrentIdeas = () => {
-    return currentTask === 1 ? task1Ideas : task2Ideas;
-  };
-
-  const addIdea = () => {
-    if (!currentIdea.trim()) return;
-
-    const newIdea = {
-      id: Date.now(),
-      content: currentIdea.trim(),
-      timestamp: new Date()
-    };
-
-    if (currentTask === 1) {
-      setTask1Ideas(prev => [...prev, newIdea]);
-    } else {
-      setTask2Ideas(prev => [...prev, newIdea]);
-    }
-
-    setCurrentIdea('');
-  };
-
-  const handleTaskComplete = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-
-    if (currentTask === 1) {
-      // Move to task 2
-      setCurrentTask(2);
-      startTask();
-    } else {
-      // Complete all transfer tasks
-      completeAllTasks();
-    }
-  }, [currentTask, startTask, completeAllTasks]);
 
   const completeAllTasks = useCallback(async () => {
     try {
@@ -131,6 +63,76 @@ const TransferTasks = ({ participantId, onComplete }) => {
       alert('Error saving data. Please try again.');
     }
   }, [task1Ideas, task2Ideas, taskStartTime, participantId, onComplete]);
+
+  const handleTaskComplete = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    if (currentTask === 1) {
+      // Move to task 2
+      setCurrentTask(2);
+      startTask();
+    } else {
+      // Complete all transfer tasks
+      completeAllTasks();
+    }
+  }, [currentTask, startTask, completeAllTasks]);
+
+  // Effects after function definitions
+  useEffect(() => {
+    loadDatasets();
+    startTask();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [loadDatasets, startTask]);
+
+  useEffect(() => {
+    if (taskStartTime) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            handleTaskComplete();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => {
+        if (timerRef.current) clearInterval(timerRef.current);
+      };
+    }
+  }, [taskStartTime, handleTaskComplete]);
+
+  const getCurrentDataset = () => {
+    // Use datasets 5 and 6 for transfer tasks
+    const taskId = currentTask === 1 ? 5 : 6;
+    return datasets[taskId];
+  };
+
+  const getCurrentIdeas = () => {
+    return currentTask === 1 ? task1Ideas : task2Ideas;
+  };
+
+  const addIdea = () => {
+    if (!currentIdea.trim()) return;
+
+    const newIdea = {
+      id: Date.now(),
+      content: currentIdea.trim(),
+      timestamp: new Date()
+    };
+
+    if (currentTask === 1) {
+      setTask1Ideas(prev => [...prev, newIdea]);
+    } else {
+      setTask2Ideas(prev => [...prev, newIdea]);
+    }
+
+    setCurrentIdea('');
+  };
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
