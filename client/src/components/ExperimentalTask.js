@@ -326,6 +326,7 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
   };
 
   if (showQuestionnaire) {
+    console.log('Rendering PostTaskQuestionnaire');
     return (
       <PostTaskQuestionnaire
         condition={condition}

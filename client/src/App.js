@@ -61,17 +61,20 @@ function App() {
   };
 
   const nextCondition = () => {
-    setIsLoading(true);
-    setLoadingMessage('Loading next task...');
-    
-    setTimeout(() => {
-      if (currentConditionIndex < conditionOrder.length - 1) {
-        setCurrentConditionIndex(currentConditionIndex + 1);
-      } else {
-        nextPhase();
-      }
-      setIsLoading(false);
-    }, 300);
+    return new Promise((resolve) => {
+      setIsLoading(true);
+      setLoadingMessage('Loading next task...');
+      
+      setTimeout(() => {
+        if (currentConditionIndex < conditionOrder.length - 1) {
+          setCurrentConditionIndex(currentConditionIndex + 1);
+        } else {
+          nextPhase();
+        }
+        setIsLoading(false);
+        resolve();
+      }, 300);
+    });
   };
 
   const renderCurrentPhase = () => {
