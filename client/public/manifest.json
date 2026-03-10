@@ -1,0 +1,25 @@
+{
+  "short_name": "iNSIGHT AI",
+  "name": "iNSIGHT AI - AI-Assisted Data Science Problem Framing Study",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#475569",
+  "background_color": "#f8fafc"
+}

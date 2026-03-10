@@ -63,7 +63,10 @@ router.put('/:id/demographics', async (req, res) => {
   try {
     const participant = await Participant.findOne({ participantId: req.params.id });
     if (!participant) {
-      return res.status(404).json({ error: 'Participant not found' });
+      return res.status(404).json({ 
+        error: 'Participant not found',
+        details: `No participant found with ID: ${req.params.id}`
+      });
     }
     
     participant.demographics = req.body;
@@ -72,7 +75,11 @@ router.put('/:id/demographics', async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Error updating demographics:', error);
-    res.status(500).json({ error: 'Failed to update demographics' });
+    res.status(500).json({ 
+      error: 'Failed to update demographics',
+      details: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 
@@ -112,12 +119,18 @@ router.put('/:id/sessions/:sessionId', async (req, res) => {
   try {
     const participant = await Participant.findOne({ participantId: req.params.id });
     if (!participant) {
-      return res.status(404).json({ error: 'Participant not found' });
+      return res.status(404).json({ 
+        error: 'Participant not found',
+        details: `No participant found with ID: ${req.params.id}`
+      });
     }
     
     const session = participant.sessions.find(s => s.sessionId === req.params.sessionId);
     if (!session) {
-      return res.status(404).json({ error: 'Session not found' });
+      return res.status(404).json({ 
+        error: 'Session not found',
+        details: `No session found with ID: ${req.params.sessionId}`
+      });
     }
     
     // Update session data
@@ -127,7 +140,11 @@ router.put('/:id/sessions/:sessionId', async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Error updating session:', error);
-    res.status(500).json({ error: 'Failed to update session' });
+    res.status(500).json({ 
+      error: 'Failed to update session',
+      details: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 
@@ -136,25 +153,36 @@ router.post('/:id/sessions/:sessionId/interactions', async (req, res) => {
   try {
     const participant = await Participant.findOne({ participantId: req.params.id });
     if (!participant) {
-      return res.status(404).json({ error: 'Participant not found' });
+      return res.status(404).json({ 
+        error: 'Participant not found',
+        details: `No participant found with ID: ${req.params.id}`
+      });
     }
     
     const session = participant.sessions.find(s => s.sessionId === req.params.sessionId);
     if (!session) {
-      return res.status(404).json({ error: 'Session not found' });
+      return res.status(404).json({ 
+        error: 'Session not found',
+        details: `No session found with ID: ${req.params.sessionId}`
+      });
     }
     
-    session.interactions.push({
+    const interaction = {
       action: req.body.action,
       timestamp: new Date(),
       details: req.body.details || {}
-    });
+    };
     
+    session.interactions.push(interaction);
     await participant.save();
     res.json({ success: true });
   } catch (error) {
     console.error('Error logging interaction:', error);
-    res.status(500).json({ error: 'Failed to log interaction' });
+    res.status(500).json({ 
+      error: 'Failed to log interaction',
+      details: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 
@@ -163,7 +191,10 @@ router.put('/:id/transfer', async (req, res) => {
   try {
     const participant = await Participant.findOne({ participantId: req.params.id });
     if (!participant) {
-      return res.status(404).json({ error: 'Participant not found' });
+      return res.status(404).json({ 
+        error: 'Participant not found',
+        details: `No participant found with ID: ${req.params.id}`
+      });
     }
     
     participant.transferTasks = req.body.transferTasks;
@@ -172,7 +203,11 @@ router.put('/:id/transfer', async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Error updating transfer tasks:', error);
-    res.status(500).json({ error: 'Failed to update transfer tasks' });
+    res.status(500).json({ 
+      error: 'Failed to update transfer tasks',
+      details: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 
@@ -181,7 +216,10 @@ router.put('/:id/complete', async (req, res) => {
   try {
     const participant = await Participant.findOne({ participantId: req.params.id });
     if (!participant) {
-      return res.status(404).json({ error: 'Participant not found' });
+      return res.status(404).json({ 
+        error: 'Participant not found',
+        details: `No participant found with ID: ${req.params.id}`
+      });
     }
     
     participant.postStudy = req.body.postStudy;
@@ -191,7 +229,11 @@ router.put('/:id/complete', async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Error completing study:', error);
-    res.status(500).json({ error: 'Failed to complete study' });
+    res.status(500).json({ 
+      error: 'Failed to complete study',
+      details: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 

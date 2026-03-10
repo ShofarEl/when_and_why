@@ -29,6 +29,11 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
 
   // Define all functions first
   const logInteraction = useCallback(async (action, details = {}) => {
+    if (!sessionId) {
+      console.warn('Attempted to log interaction before session was created:', action);
+      return;
+    }
+    
     try {
       await axios.post(`${API_BASE}/participants/${participantId}/sessions/${sessionId}/interactions`, {
         action,
@@ -125,17 +130,25 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
         condition,
         taskId: condition.taskId
       });
-      setSessionId(sessionResponse.data.sessionId);
+      const newSessionId = sessionResponse.data.sessionId;
+      setSessionId(newSessionId);
 
-      // Log task start
-      logInteraction('task_start', { condition, taskId: condition.taskId });
+      // Log task start with the new sessionId directly
+      try {
+        await axios.post(`${API_BASE}/participants/${participantId}/sessions/${newSessionId}/interactions`, {
+          action: 'task_start',
+          details: { condition, taskId: condition.taskId }
+        });
+      } catch (error) {
+        console.error('Error logging task start:', error);
+      }
 
       setTaskStarted(true);
     } catch (error) {
       console.error('Error initializing task:', error);
       alert('Error loading task. Please refresh and try again.');
     }
-  }, [participantId, condition, logInteraction]);
+  }, [participantId, condition]);
 
   // Effects after function definitions
   useEffect(() => {
@@ -270,21 +283,43 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
   };
 
   const handleQuestionnaireComplete = async (responses) => {
-    try {
-      // Update session with questionnaire responses
-      await axios.put(`${API_BASE}/participants/${participantId}/sessions/${sessionId}`, {
-        questionnaire: responses,
-        ideas,
-        aiSuggestions,
-        endTime: new Date(),
-        completed: true
-      });
+    let retryCount = 0;
+    const maxRetries = 3;
+    
+    const attemptSave = async () => {
+      try {
+        // Update session with questionnaire responses
+        await axios.put(`${API_BASE}/participants/${participantId}/sessions/${sessionId}`, {
+          questionnaire: responses,
+          ideas,
+          aiSuggestions,
+          endTime: new Date(),
+          completed: true
+        });
 
-      onComplete();
-    } catch (error) {
-      console.error('Error saving questionnaire:', error);
-      alert('Error saving data. Please try again.');
-    }
+        onComplete();
+      } catch (error) {
+        console.error('Error saving questionnaire:', error);
+        
+        if (retryCount < maxRetries) {
+          retryCount++;
+          const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+          
+          if (confirm(`Error saving data (attempt ${retryCount}/${maxRetries + 1}). Would you like to retry automatically in ${retryDelay/1000} seconds?`)) {
+            setTimeout(attemptSave, retryDelay);
+            return;
+          }
+        }
+        
+        // Show detailed error information
+        const errorMessage = error.response?.data?.error || error.message || 'Unknown error';
+        const errorDetails = error.response?.data?.details || 'No additional details';
+        
+        alert(`Error saving data: ${errorMessage}\n\nDetails: ${errorDetails}\n\nParticipant ID: ${participantId}\nSession ID: ${sessionId}\n\nPlease contact support if this continues.`);
+      }
+    };
+    
+    await attemptSave();
   };
 
   const formatTime = (seconds) => {

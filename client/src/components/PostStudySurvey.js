@@ -79,7 +79,20 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
       onComplete();
     } catch (error) {
       console.error('Error saving post-study survey:', error);
-      alert('Error saving data. Please try again.');
+      
+      const errorMessage = error.response?.data?.error || error.message || 'Unknown error';
+      const errorDetails = error.response?.data?.details || 'No additional details';
+      
+      if (confirm(`Error completing study: ${errorMessage}\n\nDetails: ${errorDetails}\n\nThis is the final step - please try again to ensure your participation is recorded.`)) {
+        try {
+          await axios.put(`${API_BASE}/participants/${participantId}/complete`, {
+            postStudy: responses
+          });
+          onComplete();
+        } catch (retryError) {
+          alert('Retry failed. Please contact support to ensure your participation is recorded.');
+        }
+      }
     }
   };
 

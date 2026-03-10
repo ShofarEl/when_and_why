@@ -74,7 +74,19 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
       onComplete();
     } catch (error) {
       console.error('Error saving demographics:', error);
-      alert('Error saving data. Please try again.');
+      
+      const errorMessage = error.response?.data?.error || error.message || 'Unknown error';
+      const errorDetails = error.response?.data?.details || 'No additional details';
+      
+      if (confirm(`Error saving demographics: ${errorMessage}\n\nDetails: ${errorDetails}\n\nWould you like to try again?`)) {
+        // Retry the submission
+        try {
+          await axios.put(`${API_BASE}/participants/${participantId}/demographics`, formData);
+          onComplete();
+        } catch (retryError) {
+          alert('Retry failed. Please refresh the page and try again.');
+        }
+      }
     }
   };
 

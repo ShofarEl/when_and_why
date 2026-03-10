@@ -9,10 +9,17 @@ const PORT = process.env.PORT || 5000;
 
 // Health check endpoint for Railway
 app.get('/api/health', (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
   res.status(200).json({ 
     status: 'healthy', 
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    database: {
+      status: dbStatus,
+      host: mongoose.connection.host || 'unknown',
+      name: mongoose.connection.name || 'unknown'
+    },
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 

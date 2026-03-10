@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-client/node_modules/
 
 # Environment variables
 .env
@@ -10,7 +9,7 @@ client/node_modules/
 .env.production.local
 
 # Build outputs
-client/build/
+build/
 dist/
 
 # Logs
@@ -102,4 +101,4 @@ Thumbs.db
 # Data exports
 exports/
 data/
-*.json
+participant_*.json
