@@ -61,14 +61,17 @@ function App() {
   };
 
   const nextCondition = () => {
+    console.log('nextCondition called, currentConditionIndex:', currentConditionIndex, 'total:', conditionOrder.length);
     return new Promise((resolve) => {
       setIsLoading(true);
       setLoadingMessage('Loading next task...');
       
       setTimeout(() => {
         if (currentConditionIndex < conditionOrder.length - 1) {
+          console.log('Moving to next condition:', currentConditionIndex + 1);
           setCurrentConditionIndex(currentConditionIndex + 1);
         } else {
+          console.log('All conditions complete, moving to next phase');
           nextPhase();
         }
         setIsLoading(false);

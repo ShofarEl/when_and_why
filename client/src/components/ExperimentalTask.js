@@ -300,7 +300,9 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
 
       // Success - any 2xx status code
       if (response.status >= 200 && response.status < 300) {
-        console.log('Calling onComplete()...');
+        console.log('Save successful, calling onComplete()...');
+        // Call onComplete which will trigger parent to change task
+        // This will unmount this entire component
         onComplete();
         console.log('onComplete() called successfully');
       } else {

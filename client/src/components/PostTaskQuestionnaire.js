@@ -80,6 +80,8 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
       
       await Promise.race([onComplete(responses), timeoutPromise]);
       console.log('Questionnaire submitted successfully');
+      // Don't reset isSubmitting - component will unmount
+      // The parent will handle the transition
     } catch (error) {
       // Error is handled in the parent component, just reset the submitting state
       console.error('Error in questionnaire submission:', error);
