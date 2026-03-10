@@ -285,6 +285,7 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
   };
 
   const handleQuestionnaireComplete = async (responses) => {
+    console.log('Starting questionnaire save...', { participantId, sessionId });
     try {
       // Update session with questionnaire responses
       const response = await axios.put(`${API_BASE}/participants/${participantId}/sessions/${sessionId}`, {
@@ -295,11 +296,23 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
         completed: true
       });
 
-      if (response.status === 200) {
+      console.log('Questionnaire save response:', response.status, response.data);
+
+      // Success - any 2xx status code
+      if (response.status >= 200 && response.status < 300) {
+        console.log('Calling onComplete()...');
         onComplete();
+        console.log('onComplete() called successfully');
+      } else {
+        throw new Error(`Unexpected response status: ${response.status}`);
       }
     } catch (error) {
       console.error('Error saving questionnaire:', error);
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
       const errorMessage = error.response?.data?.details || error.message || 'Unknown error occurred';
       alert(`Error saving data: ${errorMessage}. Please try again or contact support if the problem persists.`);
       throw error; // Re-throw so PostTaskQuestionnaire can catch it

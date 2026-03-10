@@ -79,18 +79,25 @@ const StandardizedPostTaskQuestionnaire = ({ condition, taskNumber, onComplete, 
       return;
     }
 
+    console.log('Submitting questionnaire...');
     setIsSubmitting(true);
     try {
       // Add a timeout to prevent infinite loading
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Request timeout')), 30000)
+        setTimeout(() => reject(new Error('Request timeout - please try again')), 30000)
       );
       
       await Promise.race([onComplete(responses), timeoutPromise]);
+      console.log('Questionnaire submitted successfully');
     } catch (error) {
       // Error is handled in the parent component, just reset the submitting state
       console.error('Error in questionnaire submission:', error);
       setIsSubmitting(false);
+      
+      // Show error to user if it's a timeout
+      if (error.message.includes('timeout')) {
+        alert('The request is taking too long. Please check your connection and try again.');
+      }
     }
   };
 
