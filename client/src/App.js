@@ -127,6 +127,7 @@ function App() {
           const condition = conditionOrder[currentConditionIndex];
           return (
             <ExperimentalTask
+              key={`task-${currentConditionIndex}`}
               participantId={participantId}
               condition={condition}
               taskNumber={currentConditionIndex + 1}
