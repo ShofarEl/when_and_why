@@ -285,7 +285,7 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
   const handleQuestionnaireComplete = async (responses) => {
     try {
       // Update session with questionnaire responses
-      await axios.put(`${API_BASE}/participants/${participantId}/sessions/${sessionId}`, {
+      const response = await axios.put(`${API_BASE}/participants/${participantId}/sessions/${sessionId}`, {
         questionnaire: responses,
         ideas,
         aiSuggestions,
@@ -293,10 +293,13 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
         completed: true
       });
 
-      onComplete();
+      if (response.status === 200) {
+        onComplete();
+      }
     } catch (error) {
       console.error('Error saving questionnaire:', error);
-      alert('Error saving data. Please try again.');
+      const errorMessage = error.response?.data?.details || error.message || 'Unknown error occurred';
+      alert(`Error saving data: ${errorMessage}. Please try again or contact support if the problem persists.`);
     }
   };
 

@@ -133,8 +133,23 @@ router.put('/:id/sessions/:sessionId', async (req, res) => {
       });
     }
     
-    // Update session data
-    Object.assign(session, req.body);
+    // Update session data with proper field mapping
+    if (req.body.questionnaire) {
+      session.questionnaire = req.body.questionnaire;
+    }
+    if (req.body.ideas) {
+      session.ideas = req.body.ideas;
+    }
+    if (req.body.aiSuggestions) {
+      session.aiSuggestions = req.body.aiSuggestions;
+    }
+    if (req.body.endTime) {
+      session.endTime = req.body.endTime;
+    }
+    if (req.body.completed !== undefined) {
+      session.completed = req.body.completed;
+    }
+    
     await participant.save();
     
     res.json({ success: true });
@@ -143,6 +158,7 @@ router.put('/:id/sessions/:sessionId', async (req, res) => {
     res.status(500).json({ 
       error: 'Failed to update session',
       details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
       timestamp: new Date().toISOString()
     });
   }
