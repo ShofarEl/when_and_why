@@ -153,36 +153,25 @@ router.post('/:id/sessions/:sessionId/interactions', async (req, res) => {
   try {
     const participant = await Participant.findOne({ participantId: req.params.id });
     if (!participant) {
-      return res.status(404).json({ 
-        error: 'Participant not found',
-        details: `No participant found with ID: ${req.params.id}`
-      });
+      return res.status(404).json({ error: 'Participant not found' });
     }
     
     const session = participant.sessions.find(s => s.sessionId === req.params.sessionId);
     if (!session) {
-      return res.status(404).json({ 
-        error: 'Session not found',
-        details: `No session found with ID: ${req.params.sessionId}`
-      });
+      return res.status(404).json({ error: 'Session not found' });
     }
     
-    const interaction = {
+    session.interactions.push({
       action: req.body.action,
       timestamp: new Date(),
       details: req.body.details || {}
-    };
+    });
     
-    session.interactions.push(interaction);
     await participant.save();
     res.json({ success: true });
   } catch (error) {
     console.error('Error logging interaction:', error);
-    res.status(500).json({ 
-      error: 'Failed to log interaction',
-      details: error.message,
-      timestamp: new Date().toISOString()
-    });
+    res.status(500).json({ error: 'Failed to log interaction' });
   }
 });
 

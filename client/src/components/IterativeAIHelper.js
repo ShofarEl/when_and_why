@@ -18,8 +18,6 @@ const IterativeAIHelper = ({
   const [interactionHistory, setInteractionHistory] = useState([]);
   const [userFeedback, setUserFeedback] = useState('');
   const [showFeedbackInput, setShowFeedbackInput] = useState(false);
-  const [editingSuggestion, setEditingSuggestion] = useState(null);
-  const [editedContent, setEditedContent] = useState('');
 
   const generateSuggestions = async (refinementRequest = '') => {
     if (isLoading) return;
@@ -64,12 +62,6 @@ const IterativeAIHelper = ({
   };
 
   const handleSuggestionAction = (suggestion, action) => {
-    if (action === 'edit') {
-      setEditingSuggestion(suggestion.id);
-      setEditedContent(suggestion.content);
-      return;
-    }
-
     const updatedSuggestion = { ...suggestion, [action]: true };
     
     setSuggestions(prev => 
@@ -88,37 +80,6 @@ const IterativeAIHelper = ({
     if (action === 'accepted') {
       onSuggestionAccepted(suggestion.content);
     }
-  };
-
-  const handleEditSave = (suggestionId) => {
-    if (!editedContent.trim()) return;
-
-    const updatedSuggestions = suggestions.map(s => 
-      s.id === suggestionId 
-        ? { ...s, content: editedContent.trim(), modified: true }
-        : s
-    );
-    
-    setSuggestions(updatedSuggestions);
-    
-    const interaction = {
-      type: 'ai_suggestion_modified',
-      suggestionId,
-      originalContent: suggestions.find(s => s.id === suggestionId)?.content,
-      modifiedContent: editedContent.trim(),
-      timestamp: new Date()
-    };
-    
-    setInteractionHistory(prev => [...prev, interaction]);
-    onInteractionLogged(interaction);
-    
-    setEditingSuggestion(null);
-    setEditedContent('');
-  };
-
-  const handleEditCancel = () => {
-    setEditingSuggestion(null);
-    setEditedContent('');
   };
 
   const requestRefinement = () => {
@@ -163,66 +124,23 @@ const IterativeAIHelper = ({
           
           {suggestions.map(suggestion => (
             <div key={suggestion.id} className="bg-yellow-50 rounded-xl p-4 border border-yellow-200">
-              {editingSuggestion === suggestion.id ? (
-                <div className="space-y-3">
-                  <textarea
-                    value={editedContent}
-                    onChange={(e) => setEditedContent(e.target.value)}
-                    className="w-full p-3 border-2 border-yellow-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-none"
-                    rows={3}
-                    placeholder="Edit the suggestion to better fit your needs..."
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEditSave(suggestion.id)}
-                      disabled={!editedContent.trim()}
-                      className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm transition-all duration-200"
-                    >
-                      Save Changes
-                    </button>
-                    <button
-                      onClick={handleEditCancel}
-                      className="flex-1 bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 font-medium text-sm transition-all duration-200"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-start justify-between mb-3">
-                    <p className="text-sm mb-4 text-gray-700 leading-relaxed flex-1">{suggestion.content}</p>
-                    {suggestion.modified && (
-                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full ml-2 flex-shrink-0">
-                        Modified
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => handleSuggestionAction(suggestion, 'accepted')}
-                      disabled={suggestion.accepted || suggestion.dismissed}
-                      className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm transition-all duration-200"
-                    >
-                      {suggestion.accepted ? '✓ Used' : 'Use This'}
-                    </button>
-                    <button
-                      onClick={() => handleSuggestionAction(suggestion, 'edit')}
-                      disabled={suggestion.accepted || suggestion.dismissed}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm transition-all duration-200"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleSuggestionAction(suggestion, 'dismissed')}
-                      disabled={suggestion.accepted || suggestion.dismissed}
-                      className="flex-1 bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm transition-all duration-200"
-                    >
-                      {suggestion.dismissed ? '✗ Dismissed' : 'Not Helpful'}
-                    </button>
-                  </div>
-                </>
-              )}
+              <p className="text-sm mb-4 text-gray-700 leading-relaxed">{suggestion.content}</p>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => handleSuggestionAction(suggestion, 'accepted')}
+                  disabled={suggestion.accepted || suggestion.dismissed}
+                  className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm transition-all duration-200"
+                >
+                  {suggestion.accepted ? '✓ Used' : 'Use This'}
+                </button>
+                <button
+                  onClick={() => handleSuggestionAction(suggestion, 'dismissed')}
+                  disabled={suggestion.accepted || suggestion.dismissed}
+                  className="flex-1 bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm transition-all duration-200"
+                >
+                  {suggestion.dismissed ? '✗ Dismissed' : 'Not Helpful'}
+                </button>
+              </div>
             </div>
           ))}
 
