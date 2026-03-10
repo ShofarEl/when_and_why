@@ -216,6 +216,51 @@ router.put('/:id/transfer', async (req, res) => {
   }
 });
 
+// Save transfer task questionnaire
+router.post('/:id/transfer-questionnaire', async (req, res) => {
+  try {
+    const participant = await Participant.findOne({ participantId: req.params.id });
+    if (!participant) {
+      return res.status(404).json({ 
+        error: 'Participant not found',
+        details: `No participant found with ID: ${req.params.id}`
+      });
+    }
+    
+    const { taskNumber, questionnaire, ideas, completionTime } = req.body;
+    
+    // Find or create the transfer task entry
+    let transferTask = participant.transferTasks.find(t => t.taskNumber === taskNumber);
+    
+    if (transferTask) {
+      // Update existing task
+      transferTask.ideas = ideas.map(idea => idea.content || idea);
+      transferTask.completionTime = completionTime;
+      transferTask.questionnaire = questionnaire;
+      transferTask.timestamp = new Date();
+    } else {
+      // Create new task entry
+      participant.transferTasks.push({
+        taskNumber,
+        ideas: ideas.map(idea => idea.content || idea),
+        completionTime,
+        questionnaire,
+        timestamp: new Date()
+      });
+    }
+    
+    await participant.save();
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error saving transfer questionnaire:', error);
+    res.status(500).json({ 
+      error: 'Failed to save transfer questionnaire',
+      details: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // Complete post-study survey
 router.put('/:id/complete', async (req, res) => {
   try {

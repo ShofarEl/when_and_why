@@ -64,7 +64,12 @@ const participantSchema = new mongoose.Schema({
     taskNumber: Number,
     ideas: [String],
     completionTime: Number,
-    timestamp: Date
+    timestamp: Date,
+    questionnaire: {
+      agency: [Number],
+      dependence: Number,
+      cognitiveLoad: [Number]
+    }
   }],
   postStudy: {
     conditionPreference: [Number], // ranking 1-4

@@ -300,6 +300,7 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
       console.error('Error saving questionnaire:', error);
       const errorMessage = error.response?.data?.details || error.message || 'Unknown error occurred';
       alert(`Error saving data: ${errorMessage}. Please try again or contact support if the problem persists.`);
+      throw error; // Re-throw so PostTaskQuestionnaire can catch it
     }
   };
 

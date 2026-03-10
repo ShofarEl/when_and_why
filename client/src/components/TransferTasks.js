@@ -92,11 +92,13 @@ const TransferTasks = ({ participantId, onComplete }) => {
         startTask();
       } else {
         // Complete all tasks
-        completeAllTasks();
+        await completeAllTasks();
       }
     } catch (error) {
       console.error('Error saving questionnaire:', error);
-      alert('Error saving data. Please try again.');
+      const errorMessage = error.response?.data?.details || error.message || 'Unknown error occurred';
+      alert(`Error saving data: ${errorMessage}. Please try again or contact support if the problem persists.`);
+      throw error; // Re-throw so the questionnaire component can handle it
     }
   }, [currentTask, task1Ideas, task2Ideas, taskStartTime, participantId, startTask, completeAllTasks]);
 
@@ -197,15 +199,15 @@ const TransferTasks = ({ participantId, onComplete }) => {
 
   return (
     <div className="max-w-5xl mx-auto px-2 sm:px-4">
-      {showQuestionnaire && (
+      {showQuestionnaire ? (
         <StandardizedPostTaskQuestionnaire
           onComplete={handleQuestionnaireComplete}
           taskType="transfer"
           taskNumber={currentTask}
         />
-      )}
-      
-      <div className="bg-white/90 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+      ) : (
+        <>
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl md:rounded-2xl shadow-xl border border-white/20 overflow-hidden">
         <div className="bg-gradient-to-r from-amber-600 to-orange-600 px-4 md:px-6 lg:px-8 py-4 md:py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center">
@@ -408,6 +410,8 @@ const TransferTasks = ({ participantId, onComplete }) => {
           </span>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 };

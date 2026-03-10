@@ -8,6 +8,7 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const agencyQuestions = [
     "I felt in control of the problem-framing process",
@@ -62,14 +63,20 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateResponses()) {
       return;
     }
 
-    onComplete(responses);
+    setIsSubmitting(true);
+    try {
+      await onComplete(responses);
+    } catch (error) {
+      // Error is handled in the parent component, just reset the submitting state
+      setIsSubmitting(false);
+    }
   };
 
   const getConditionDescription = () => {
@@ -305,12 +312,13 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
             <div className="flex justify-center pt-2 md:pt-4">
               <button
                 type="submit"
-                className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold text-sm md:text-base rounded-lg md:rounded-xl hover:from-emerald-700 hover:to-teal-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl w-full sm:w-auto"
+                disabled={isSubmitting}
+                className="inline-flex items-center justify-center px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold text-sm md:text-base rounded-lg md:rounded-xl hover:from-emerald-700 hover:to-teal-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 <svg className="w-4 h-4 md:w-5 md:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
-                Continue to Next Task
+                {isSubmitting ? 'Saving...' : 'Continue to Next Task'}
               </button>
             </div>
           </form>
