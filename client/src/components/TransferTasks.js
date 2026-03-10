@@ -62,25 +62,7 @@ const TransferTasks = ({ participantId, onComplete }) => {
       }, 2000);
     } catch (error) {
       console.error('Error saving transfer tasks:', error);
-      
-      const errorMessage = error.response?.data?.error || error.message || 'Unknown error';
-      const errorDetails = error.response?.data?.details || 'No additional details';
-      
-      if (confirm(`Error saving transfer tasks: ${errorMessage}\n\nDetails: ${errorDetails}\n\nWould you like to retry?`)) {
-        try {
-          await axios.put(`${API_BASE}/participants/${participantId}/transfer`, {
-            transferTasks: [
-              { taskNumber: 1, ideas: task1Ideas, completionTime: Math.round((Date.now() - taskStartTime) / 1000) },
-              { taskNumber: 2, ideas: task2Ideas, completionTime: Math.round((Date.now() - taskStartTime) / 1000) }
-            ]
-          });
-          setTimeout(() => {
-            onComplete();
-          }, 2000);
-        } catch (retryError) {
-          alert('Retry failed. Please contact support.');
-        }
-      }
+      alert('Error saving data. Please try again.');
     }
   }, [task1Ideas, task2Ideas, taskStartTime, participantId, onComplete]);
 
@@ -114,31 +96,7 @@ const TransferTasks = ({ participantId, onComplete }) => {
       }
     } catch (error) {
       console.error('Error saving questionnaire:', error);
-      
-      const errorMessage = error.response?.data?.error || error.message || 'Unknown error';
-      const errorDetails = error.response?.data?.details || 'No additional details';
-      
-      if (confirm(`Error saving transfer task questionnaire: ${errorMessage}\n\nDetails: ${errorDetails}\n\nWould you like to retry?`)) {
-        try {
-          await axios.post(`${API_BASE}/participants/${participantId}/transfer-questionnaire`, {
-            taskNumber: currentTask,
-            questionnaire: responses,
-            ideas: currentTask === 1 ? task1Ideas : task2Ideas,
-            completionTime: Math.round((Date.now() - taskStartTime) / 1000)
-          });
-
-          setShowQuestionnaire(false);
-
-          if (currentTask === 1) {
-            setCurrentTask(2);
-            startTask();
-          } else {
-            completeAllTasks();
-          }
-        } catch (retryError) {
-          alert('Retry failed. Please contact support.');
-        }
-      }
+      alert('Error saving data. Please try again.');
     }
   }, [currentTask, task1Ideas, task2Ideas, taskStartTime, participantId, startTask, completeAllTasks]);
 

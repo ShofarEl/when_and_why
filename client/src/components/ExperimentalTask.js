@@ -283,43 +283,21 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
   };
 
   const handleQuestionnaireComplete = async (responses) => {
-    let retryCount = 0;
-    const maxRetries = 3;
-    
-    const attemptSave = async () => {
-      try {
-        // Update session with questionnaire responses
-        await axios.put(`${API_BASE}/participants/${participantId}/sessions/${sessionId}`, {
-          questionnaire: responses,
-          ideas,
-          aiSuggestions,
-          endTime: new Date(),
-          completed: true
-        });
+    try {
+      // Update session with questionnaire responses
+      await axios.put(`${API_BASE}/participants/${participantId}/sessions/${sessionId}`, {
+        questionnaire: responses,
+        ideas,
+        aiSuggestions,
+        endTime: new Date(),
+        completed: true
+      });
 
-        onComplete();
-      } catch (error) {
-        console.error('Error saving questionnaire:', error);
-        
-        if (retryCount < maxRetries) {
-          retryCount++;
-          const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff
-          
-          if (confirm(`Error saving data (attempt ${retryCount}/${maxRetries + 1}). Would you like to retry automatically in ${retryDelay/1000} seconds?`)) {
-            setTimeout(attemptSave, retryDelay);
-            return;
-          }
-        }
-        
-        // Show detailed error information
-        const errorMessage = error.response?.data?.error || error.message || 'Unknown error';
-        const errorDetails = error.response?.data?.details || 'No additional details';
-        
-        alert(`Error saving data: ${errorMessage}\n\nDetails: ${errorDetails}\n\nParticipant ID: ${participantId}\nSession ID: ${sessionId}\n\nPlease contact support if this continues.`);
-      }
-    };
-    
-    await attemptSave();
+      onComplete();
+    } catch (error) {
+      console.error('Error saving questionnaire:', error);
+      alert('Error saving data. Please try again.');
+    }
   };
 
   const formatTime = (seconds) => {
