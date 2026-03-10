@@ -81,9 +81,15 @@ const StandardizedPostTaskQuestionnaire = ({ condition, taskNumber, onComplete, 
 
     setIsSubmitting(true);
     try {
-      await onComplete(responses);
+      // Add a timeout to prevent infinite loading
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 30000)
+      );
+      
+      await Promise.race([onComplete(responses), timeoutPromise]);
     } catch (error) {
       // Error is handled in the parent component, just reset the submitting state
+      console.error('Error in questionnaire submission:', error);
       setIsSubmitting(false);
     }
   };

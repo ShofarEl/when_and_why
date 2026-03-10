@@ -41,6 +41,8 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
       });
     } catch (error) {
       console.error('Error logging interaction:', error);
+      console.error('Failed to log:', { action, details });
+      // Don't throw - interaction logging should not block the user experience
     }
   }, [participantId, sessionId]);
 

@@ -169,12 +169,29 @@ router.post('/:id/sessions/:sessionId/interactions', async (req, res) => {
   try {
     const participant = await Participant.findOne({ participantId: req.params.id });
     if (!participant) {
-      return res.status(404).json({ error: 'Participant not found' });
+      console.error(`Participant not found: ${req.params.id}`);
+      return res.status(404).json({ 
+        error: 'Participant not found',
+        details: `No participant found with ID: ${req.params.id}`
+      });
     }
     
     const session = participant.sessions.find(s => s.sessionId === req.params.sessionId);
     if (!session) {
-      return res.status(404).json({ error: 'Session not found' });
+      console.error(`Session not found: ${req.params.sessionId} for participant ${req.params.id}`);
+      return res.status(404).json({ 
+        error: 'Session not found',
+        details: `No session found with ID: ${req.params.sessionId}`
+      });
+    }
+    
+    // Validate interaction data
+    if (!req.body.action) {
+      console.error('Missing action in interaction log');
+      return res.status(400).json({ 
+        error: 'Invalid interaction data',
+        details: 'Action is required'
+      });
     }
     
     session.interactions.push({
@@ -187,7 +204,13 @@ router.post('/:id/sessions/:sessionId/interactions', async (req, res) => {
     res.json({ success: true });
   } catch (error) {
     console.error('Error logging interaction:', error);
-    res.status(500).json({ error: 'Failed to log interaction' });
+    console.error('Request body:', JSON.stringify(req.body, null, 2));
+    res.status(500).json({ 
+      error: 'Failed to log interaction',
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 
