@@ -317,6 +317,11 @@ const ConsentForm = ({ onConsent }) => {
                   ID (which will be displayed at the end of the study).
                 </p>
                 <p className="text-slate-600 mb-2">
+                  <strong>If you don't have your participant ID:</strong> We understand that you might not be able 
+                  to request data deletion because the study is fully anonymous and you may not remember your 
+                  participant ID. In such cases, your data will remain part of the anonymized dataset.
+                </p>
+                <p className="text-slate-600 mb-2">
                   <strong>Deletion deadline:</strong> Data deletion requests must be made within 30 days of completing 
                   the study. After this period, data may be aggregated or anonymized in ways that make individual 
                   deletion impossible.
