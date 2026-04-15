@@ -26,6 +26,7 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
 
   const timerRef = useRef(null);
   const activityTimerRef = useRef(null);
+  const lastAiGenerationTime = useRef(0); // Track last AI generation time
 
   // Define all functions first
   const logInteraction = useCallback(async (action, details = {}) => {
@@ -49,7 +50,16 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
   const generateAiSuggestions = useCallback(async (isAutoTrigger = false) => {
     if (isLoadingAI) return;
     
+    // Cooldown: Don't generate if we generated within the last 60 seconds
+    const timeSinceLastGeneration = Date.now() - lastAiGenerationTime.current;
+    if (timeSinceLastGeneration < 60000) {
+      console.log('AI suggestion cooldown active, skipping generation');
+      return;
+    }
+    
     setIsLoadingAI(true);
+    lastAiGenerationTime.current = Date.now(); // Update last generation time
+    
     try {
       const response = await axios.post(`${API_BASE}/ai/suggestions`, {
         taskId: condition.taskId,
@@ -102,6 +112,12 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
 
   const requestAiHelp = useCallback((isAutoTrigger = false) => {
     logInteraction('help_request', { isAutoTrigger });
+    
+    // For manual requests (button clicks), bypass cooldown
+    if (!isAutoTrigger) {
+      lastAiGenerationTime.current = 0; // Reset cooldown for manual requests
+    }
+    
     generateAiSuggestions(isAutoTrigger);
   }, [logInteraction, generateAiSuggestions]);
 
@@ -201,13 +217,13 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
   }, [taskStarted, taskCompleted, lastActivityTime, showAiSuggestions, ideas.length, completeTask, condition.timing, requestAiHelp]);
 
   useEffect(() => {
-    // Always-On mode: refresh suggestions periodically (every 90 seconds instead of 20)
+    // Always-On mode: refresh suggestions periodically (every 90 seconds)
     if (condition.timing === 'always_on' && taskStarted && !taskCompleted) {
       const interval = setInterval(() => {
         if (!isLoadingAI) {
-          generateAiSuggestions();
+          generateAiSuggestions(true); // Mark as auto-trigger
         }
-      }, 90000); // Changed from 20000 (20s) to 90000 (90s)
+      }, 90000); // 90 seconds
       
       return () => clearInterval(interval);
     }
@@ -247,10 +263,8 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
       hasRationale: condition.reflection === 'required'
     });
 
-    // For Always-On mode, refresh suggestions after idea submission
-    if (condition.timing === 'always_on') {
-      setTimeout(() => generateAiSuggestions(), 1000);
-    }
+    // Removed auto-trigger after idea submission to prevent rapid-fire suggestions
+    // The periodic 90-second interval will handle Always-On suggestions
   };
 
   const handleRationaleSubmit = () => {

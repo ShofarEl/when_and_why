@@ -11,11 +11,23 @@
 - Updated validation to only check age if provided
 - Changed label from "Age *" to "Age (Optional)"
 
-#### ✅ 2. AI Suggestion Frequency Reduced (Tasks 2 & 3)
-**Issue:** In Always-On mode, AI suggestions were appearing every 20 seconds, which was too frequent
+#### ✅ 2. AI Suggestion Frequency Fixed (Tasks 2 & 3)
+**Issue:** In Always-On mode, AI suggestions were appearing sporadically and too frequently (every second in some cases)
+**Root Cause:** Multiple triggers were firing:
+- Initial trigger (2s after start)
+- Periodic trigger (every 20s, now 90s)
+- After EACH idea submission (1s delay)
+
 **Fix:**
-- Changed Always-On AI suggestion refresh interval from 20 seconds to 90 seconds
-- This provides a better balance between continuous assistance and not overwhelming users
+- Removed the auto-trigger after idea submission
+- Changed periodic interval from 20 seconds to 90 seconds
+- Added 60-second cooldown mechanism to prevent rapid-fire suggestions
+- Manual "Get AI Help" button bypasses cooldown (for JIT mode)
+
+**Result:** 
+- Always-On mode now generates suggestions only every 90 seconds (minimum)
+- No more sporadic rapid-fire suggestions after submitting ideas
+- Users won't be overwhelmed with constant AI suggestions
 
 #### ✅ 3. Activity Detection Improved
 **Issue:** Mouse/trackpad movement (even aimless scrolling) was counting as activity, preventing JIT AI triggers
@@ -87,8 +99,14 @@ The 4-point scale for condition preferences is intentional and different from th
 ### Files Modified
 
 1. `client/src/components/ExperimentalTask.js`
-   - Reduced Always-On suggestion frequency (20s → 90s)
-   - Improved activity detection (added onKeyDown, onFocus)
+   - **AI Suggestion Timing:**
+     - Reduced Always-On suggestion frequency (20s → 90s)
+     - Removed auto-trigger after idea submission
+     - Added 60-second cooldown mechanism using `lastAiGenerationTime` ref
+     - Manual help requests bypass cooldown
+   - **Activity Detection:**
+     - Added onKeyDown, onFocus event handlers to textarea
+     - Only actual typing/interaction resets activity timer
 
 2. `client/src/components/PreStudySurvey.js`
    - Made age field optional
