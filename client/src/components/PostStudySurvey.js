@@ -7,7 +7,7 @@ const API_BASE = process.env.NODE_ENV === 'production'
 
 const PostStudySurvey = ({ participantId, onComplete }) => {
   const [responses, setResponses] = useState({
-    conditionPreference: [0, 0, 0, 0], // Rankings 1-4 for each condition
+    conditionRatings: [4, 4, 4, 4], // Changed from rankings to ratings (1-4 scale for each)
     learningRating: 4,
     usefulnessRating: 4,
     feedback: ''
@@ -22,34 +22,23 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
     { label: 'Always-On AI + Optional Explanations', key: 'always_optional', color: 'orange' }
   ];
 
-  const handleRankingChange = (conditionIndex, rank) => {
-    const newRankings = [...responses.conditionPreference];
-    
-    // Clear any existing assignment of this rank
-    const existingIndex = newRankings.indexOf(rank);
-    if (existingIndex !== -1) {
-      newRankings[existingIndex] = 0;
-    }
-    
-    // Assign new rank
-    newRankings[conditionIndex] = rank;
+  const handleRatingChange = (conditionIndex, rating) => {
+    const newRatings = [...responses.conditionRatings];
+    newRatings[conditionIndex] = rating;
     
     setResponses(prev => ({
       ...prev,
-      conditionPreference: newRankings
+      conditionRatings: newRatings
     }));
   };
 
   const validateResponses = () => {
     const newErrors = {};
     
-    // Check if all conditions have been ranked
-    const rankings = responses.conditionPreference;
-    const usedRanks = rankings.filter(rank => rank > 0);
-    const uniqueRanks = new Set(usedRanks);
-    
-    if (usedRanks.length !== 4 || uniqueRanks.size !== 4) {
-      newErrors.ranking = 'Please rank all 4 conditions from 1 (most preferred) to 4 (least preferred)';
+    // Check if all conditions have been rated
+    const ratings = responses.conditionRatings;
+    if (ratings.some(rating => !rating || rating < 1 || rating > 4)) {
+      newErrors.rating = 'Please rate all 4 conditions from 1 (most preferred) to 4 (least preferred)';
     }
     
     if (!responses.learningRating) {
@@ -83,23 +72,23 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
     }
   };
 
-  const getRankingColor = (rank) => {
-    switch (rank) {
-      case 1: return 'bg-emerald-600 text-white shadow-lg scale-110';
-      case 2: return 'bg-blue-600 text-white shadow-lg scale-105';
-      case 3: return 'bg-amber-600 text-white shadow-md scale-100';
-      case 4: return 'bg-red-600 text-white shadow-sm scale-95';
-      default: return 'bg-slate-100 border-2 border-slate-300 text-slate-600 hover:bg-slate-200 hover:border-slate-400';
+  const getRatingColor = (rating) => {
+    switch (rating) {
+      case 1: return 'bg-emerald-600 border-emerald-600 text-white shadow-lg';
+      case 2: return 'bg-blue-600 border-blue-600 text-white shadow-lg';
+      case 3: return 'bg-amber-600 border-amber-600 text-white shadow-md';
+      case 4: return 'bg-red-600 border-red-600 text-white shadow-sm';
+      default: return 'bg-slate-100 border-slate-300 text-slate-600 hover:bg-slate-200 hover:border-slate-400';
     }
   };
 
-  const getRankLabel = (rank) => {
-    switch (rank) {
-      case 1: return '1st - Most Preferred';
-      case 2: return '2nd - Good';
-      case 3: return '3rd - Okay';
-      case 4: return '4th - Least Preferred';
-      default: return 'Click to rank';
+  const getRatingLabel = (rating) => {
+    switch (rating) {
+      case 1: return 'Most Preferred';
+      case 2: return 'Good';
+      case 3: return 'Okay';
+      case 4: return 'Least Preferred';
+      default: return 'Select rating';
     }
   };
 
@@ -137,7 +126,7 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-            {/* Condition Preference Ranking */}
+            {/* Condition Preference Ratings */}
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl md:rounded-2xl p-4 md:p-6 border border-blue-100">
               <div className="flex items-center mb-4 md:mb-6">
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-600 rounded-lg md:rounded-xl flex items-center justify-center mr-2 md:mr-3">
@@ -148,7 +137,7 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
                 <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-gray-800">Condition Preferences</h3>
               </div>
               <p className="text-xs md:text-sm text-gray-600 mb-4 md:mb-6">
-                Rank the 4 conditions from <strong>1 (most preferred)</strong> to <strong>4 (least preferred)</strong>:
+                Rate each condition from <strong>1 (most preferred)</strong> to <strong>4 (least preferred)</strong>. You can assign the same rating to multiple conditions:
               </p>
               
               <div className="space-y-3 md:space-y-4">
@@ -164,58 +153,58 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
                       </div>
                       <div className="flex justify-center lg:justify-end">
                         <div className="flex space-x-2">
-                          {[1, 2, 3, 4].map(rank => (
+                          {[1, 2, 3, 4].map(rating => (
                             <button
-                              key={rank}
+                              key={rating}
                               type="button"
-                              onClick={() => handleRankingChange(index, rank)}
-                              className={`w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl font-bold text-xs md:text-sm transition-all duration-200 ${
-                                responses.conditionPreference[index] === rank
-                                  ? getRankingColor(rank)
-                                  : 'bg-gray-100 border-2 border-gray-300 text-gray-600 hover:bg-gray-200 hover:border-gray-400'
+                              onClick={() => handleRatingChange(index, rating)}
+                              className={`w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl font-bold text-xs md:text-sm transition-all duration-200 border-2 ${
+                                responses.conditionRatings[index] === rating
+                                  ? getRatingColor(rating)
+                                  : 'bg-gray-100 border-gray-300 text-gray-600 hover:bg-gray-200 hover:border-gray-400'
                               }`}
-                              title={getRankLabel(rank)}
+                              title={getRatingLabel(rating)}
                             >
-                              {rank}
+                              {rating}
                             </button>
                           ))}
                         </div>
                       </div>
                     </div>
-                    {responses.conditionPreference[index] > 0 && (
+                    {responses.conditionRatings[index] > 0 && (
                       <div className="mt-3 text-xs md:text-sm font-medium text-gray-600">
-                        Ranked: {getRankLabel(responses.conditionPreference[index])}
+                        Rating: {getRatingLabel(responses.conditionRatings[index])}
                       </div>
                     )}
                   </div>
                 ))}
               </div>
               
-              {errors.ranking && <p className="text-red-500 text-xs md:text-sm mt-4 flex items-center">
+              {errors.rating && <p className="text-red-500 text-xs md:text-sm mt-4 flex items-center">
                 <svg className="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {errors.ranking}
+                {errors.rating}
               </p>}
               
               <div className="mt-4 md:mt-6 bg-white rounded-lg md:rounded-xl p-3 md:p-4 border border-gray-200">
-                <h4 className="font-medium text-xs md:text-sm text-gray-800 mb-2">Ranking Legend:</h4>
+                <h4 className="font-medium text-xs md:text-sm text-gray-800 mb-2">Rating Legend:</h4>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                   <div className="flex items-center">
                     <div className="w-4 h-4 md:w-6 md:h-6 bg-emerald-600 rounded mr-2"></div>
-                    <span>1st - Most Preferred</span>
+                    <span>1 - Most Preferred</span>
                   </div>
                   <div className="flex items-center">
                     <div className="w-4 h-4 md:w-6 md:h-6 bg-blue-600 rounded mr-2"></div>
-                    <span>2nd - Good</span>
+                    <span>2 - Good</span>
                   </div>
                   <div className="flex items-center">
                     <div className="w-4 h-4 md:w-6 md:h-6 bg-amber-600 rounded mr-2"></div>
-                    <span>3rd - Okay</span>
+                    <span>3 - Okay</span>
                   </div>
                   <div className="flex items-center">
                     <div className="w-4 h-4 md:w-6 md:h-6 bg-red-600 rounded mr-2"></div>
-                    <span>4th - Least Preferred</span>
+                    <span>4 - Least Preferred</span>
                   </div>
                 </div>
               </div>

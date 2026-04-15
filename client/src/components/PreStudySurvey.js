@@ -44,7 +44,8 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.age || formData.age < 18 || formData.age > 100) {
+    // Age is now optional - only validate if provided
+    if (formData.age && (formData.age < 18 || formData.age > 100)) {
       newErrors.age = 'Please enter a valid age (18-100)';
     }
     if (!formData.academicLevel) {
@@ -117,7 +118,7 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">
-                  Age *
+                  Age (Optional)
                 </label>
                 <input
                   type="number"
@@ -128,7 +129,7 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
                   className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 text-sm md:text-base ${
                     errors.age ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                   }`}
-                  placeholder="Enter your age"
+                  placeholder="Enter your age (optional)"
                 />
                 {errors.age && <p className="text-red-500 text-xs md:text-sm mt-1 flex items-center">
                   <svg className="w-3 h-3 md:w-4 md:h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

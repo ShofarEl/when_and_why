@@ -201,13 +201,13 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
   }, [taskStarted, taskCompleted, lastActivityTime, showAiSuggestions, ideas.length, completeTask, condition.timing, requestAiHelp]);
 
   useEffect(() => {
-    // Always-On mode: refresh suggestions periodically
+    // Always-On mode: refresh suggestions periodically (every 90 seconds instead of 20)
     if (condition.timing === 'always_on' && taskStarted && !taskCompleted) {
       const interval = setInterval(() => {
         if (!isLoadingAI) {
           generateAiSuggestions();
         }
-      }, 20000);
+      }, 90000); // Changed from 20000 (20s) to 90000 (90s)
       
       return () => clearInterval(interval);
     }
@@ -448,6 +448,8 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
                   setCurrentIdea(e.target.value);
                   setLastActivityTime(Date.now());
                 }}
+                onKeyDown={() => setLastActivityTime(Date.now())}
+                onFocus={() => setLastActivityTime(Date.now())}
                 placeholder="Type your research question or project idea here..."
                 className="w-full p-3 md:p-4 border-2 border-slate-200 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm md:text-base lg:text-lg resize-none transition-all duration-200"
                 rows={3}
