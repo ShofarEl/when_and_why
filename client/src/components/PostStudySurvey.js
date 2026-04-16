@@ -7,9 +7,9 @@ const API_BASE = process.env.NODE_ENV === 'production'
 
 const PostStudySurvey = ({ participantId, onComplete }) => {
   const [responses, setResponses] = useState({
-    conditionRatings: [4, 4, 4, 4], // Changed from rankings to ratings (1-4 scale for each)
-    learningRating: 4,
-    usefulnessRating: 4,
+    conditionRatings: [3, 3, 3, 3], // Changed to 5-point scale, default to middle (3)
+    learningRating: 3, // Changed from 7-point to 5-point, default to middle
+    usefulnessRating: 3, // Changed from 7-point to 5-point, default to middle
     feedback: ''
   });
 
@@ -37,8 +37,8 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
     
     // Check if all conditions have been rated
     const ratings = responses.conditionRatings;
-    if (ratings.some(rating => !rating || rating < 1 || rating > 4)) {
-      newErrors.rating = 'Please rate all 4 conditions from 1 (most preferred) to 4 (least preferred)';
+    if (ratings.some(rating => !rating || rating < 1 || rating > 5)) {
+      newErrors.rating = 'Please rate all 4 conditions from 1 (strongly prefer) to 5 (strongly do not prefer)';
     }
     
     if (!responses.learningRating) {
@@ -76,18 +76,20 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
     switch (rating) {
       case 1: return 'bg-emerald-600 border-emerald-600 text-white shadow-lg';
       case 2: return 'bg-blue-600 border-blue-600 text-white shadow-lg';
-      case 3: return 'bg-amber-600 border-amber-600 text-white shadow-md';
-      case 4: return 'bg-red-600 border-red-600 text-white shadow-sm';
+      case 3: return 'bg-gray-600 border-gray-600 text-white shadow-md';
+      case 4: return 'bg-amber-600 border-amber-600 text-white shadow-md';
+      case 5: return 'bg-red-600 border-red-600 text-white shadow-sm';
       default: return 'bg-slate-100 border-slate-300 text-slate-600 hover:bg-slate-200 hover:border-slate-400';
     }
   };
 
   const getRatingLabel = (rating) => {
     switch (rating) {
-      case 1: return 'Most Preferred';
-      case 2: return 'Good';
-      case 3: return 'Okay';
-      case 4: return 'Least Preferred';
+      case 1: return 'Strongly Prefer';
+      case 2: return 'Prefer';
+      case 3: return 'Neutral';
+      case 4: return 'Do Not Prefer';
+      case 5: return 'Strongly Do Not Prefer';
       default: return 'Select rating';
     }
   };
@@ -153,7 +155,7 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
                       </div>
                       <div className="flex justify-center lg:justify-end">
                         <div className="flex space-x-2">
-                          {[1, 2, 3, 4].map(rating => (
+                          {[1, 2, 3, 4, 5].map(rating => (
                             <button
                               key={rating}
                               type="button"
@@ -189,22 +191,26 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
               
               <div className="mt-4 md:mt-6 bg-white rounded-lg md:rounded-xl p-3 md:p-4 border border-gray-200">
                 <h4 className="font-medium text-xs md:text-sm text-gray-800 mb-2">Rating Legend:</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs">
                   <div className="flex items-center">
                     <div className="w-4 h-4 md:w-6 md:h-6 bg-emerald-600 rounded mr-2"></div>
-                    <span>1 - Most Preferred</span>
+                    <span>1 - Strongly Prefer</span>
                   </div>
                   <div className="flex items-center">
                     <div className="w-4 h-4 md:w-6 md:h-6 bg-blue-600 rounded mr-2"></div>
-                    <span>2 - Good</span>
+                    <span>2 - Prefer</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 md:w-6 md:h-6 bg-gray-600 rounded mr-2"></div>
+                    <span>3 - Neutral</span>
                   </div>
                   <div className="flex items-center">
                     <div className="w-4 h-4 md:w-6 md:h-6 bg-amber-600 rounded mr-2"></div>
-                    <span>3 - Okay</span>
+                    <span>4 - Do Not Prefer</span>
                   </div>
                   <div className="flex items-center">
                     <div className="w-4 h-4 md:w-6 md:h-6 bg-red-600 rounded mr-2"></div>
-                    <span>4 - Least Preferred</span>
+                    <span>5 - Strongly Do Not Prefer</span>
                   </div>
                 </div>
               </div>
@@ -228,7 +234,7 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 md:mb-4 gap-3 sm:gap-0">
                   <span className="text-xs text-gray-500 font-medium">Nothing</span>
                   <div className="flex justify-center space-x-1 md:space-x-2">
-                    {[1, 2, 3, 4, 5, 6, 7].map(value => (
+                    {[1, 2, 3, 4, 5].map(value => (
                       <label key={value} className="flex flex-col items-center cursor-pointer group">
                         <input
                           type="radio"
@@ -251,11 +257,11 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
                       </label>
                     ))}
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">A lot</span>
+                  <span className="text-xs text-gray-500 font-medium">A great deal</span>
                 </div>
                 <div className="text-center">
                   <span className="text-xs md:text-sm text-gray-600">
-                    Selected: <strong>{responses.learningRating}/7</strong>
+                    Selected: <strong>{responses.learningRating}/5</strong>
                   </span>
                 </div>
               </div>
@@ -286,7 +292,7 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 md:mb-4 gap-3 sm:gap-0">
                   <span className="text-xs text-gray-500 font-medium">Not useful</span>
                   <div className="flex justify-center space-x-1 md:space-x-2">
-                    {[1, 2, 3, 4, 5, 6, 7].map(value => (
+                    {[1, 2, 3, 4, 5].map(value => (
                       <label key={value} className="flex flex-col items-center cursor-pointer group">
                         <input
                           type="radio"
@@ -309,11 +315,11 @@ const PostStudySurvey = ({ participantId, onComplete }) => {
                       </label>
                     ))}
                   </div>
-                  <span className="text-xs text-gray-500 font-medium">Very useful</span>
+                  <span className="text-xs text-gray-500 font-medium">Extremely useful</span>
                 </div>
                 <div className="text-center">
                   <span className="text-xs md:text-sm text-gray-600">
-                    Selected: <strong>{responses.usefulnessRating}/7</strong>
+                    Selected: <strong>{responses.usefulnessRating}/5</strong>
                   </span>
                 </div>
               </div>

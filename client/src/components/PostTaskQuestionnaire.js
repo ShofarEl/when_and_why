@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
   const [responses, setResponses] = useState({
-    agency: [4, 4, 4, 4, 4, 4], // 6-item scale, default to middle
-    dependence: 4,
-    cognitiveLoad: [4, 4, 4] // 3-item scale
+    agency: [3, 3, 3, 3, 3, 3], // 6-item scale, default to middle (3 of 5-point scale)
+    dependence: 3,
+    cognitiveLoad: [3, 3, 3] // 3-item scale, default to middle
   });
 
   const [errors, setErrors] = useState({});
@@ -180,7 +180,7 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                       <span className="text-xs text-gray-500 font-medium">Strongly Disagree</span>
                       <div className="flex justify-center space-x-1 md:space-x-2">
-                        {[1, 2, 3, 4, 5, 6, 7].map(value => (
+                        {[1, 2, 3, 4, 5].map(value => (
                           <label key={value} className="flex flex-col items-center cursor-pointer group">
                             <input
                               type="radio"
@@ -232,7 +232,7 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                   <span className="text-xs text-gray-500 font-medium">Not at all</span>
                   <div className="flex justify-center space-x-1 md:space-x-2">
-                    {[1, 2, 3, 4, 5, 6, 7].map(value => (
+                    {[1, 2, 3, 4, 5].map(value => (
                       <label key={value} className="flex flex-col items-center cursor-pointer group">
                         <input
                           type="radio"
@@ -290,7 +290,7 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                       <span className="text-xs text-gray-500 font-medium">Very Low</span>
                       <div className="flex justify-center space-x-1 md:space-x-2">
-                        {[1, 2, 3, 4, 5, 6, 7].map(value => (
+                        {[1, 2, 3, 4, 5].map(value => (
                           <label key={value} className="flex flex-col items-center cursor-pointer group">
                             <input
                               type="radio"

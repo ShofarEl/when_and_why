@@ -10,8 +10,8 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
     age: '',
     academicLevel: '',
     major: '',
-    dataScienceFamiliarity: 4,
-    aiExperience: 4,
+    dataScienceFamiliarity: 3, // Changed default from 4 to 3 (middle of 5-point scale)
+    aiExperience: 3, // Changed default from 4 to 3 (middle of 5-point scale)
     priorCourses: []
   });
 
@@ -203,25 +203,30 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
                 <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2 md:mb-3">
                   Rate your familiarity with data science concepts
                 </label>
-                <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                  <span className="text-xs md:text-sm text-gray-500 font-medium">Not familiar</span>
-                  <div className="flex-1 relative">
-                    <input
-                      type="range"
-                      min="1"
-                      max="7"
-                      value={formData.dataScienceFamiliarity}
-                      onChange={(e) => handleInputChange('dataScienceFamiliarity', parseInt(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                    />
-                    <div className="flex justify-between text-xs text-gray-400 mt-1">
-                      {[1,2,3,4,5,6,7].map(n => <span key={n}>{n}</span>)}
-                    </div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+                  <span className="text-xs text-gray-500 font-medium">Not at all familiar</span>
+                  <div className="flex justify-center space-x-1 md:space-x-2">
+                    {[1, 2, 3, 4, 5].map(value => (
+                      <label key={value} className="flex flex-col items-center cursor-pointer group">
+                        <input
+                          type="radio"
+                          name="dataScienceFamiliarity"
+                          value={value}
+                          checked={formData.dataScienceFamiliarity === value}
+                          onChange={(e) => handleInputChange('dataScienceFamiliarity', parseInt(e.target.value))}
+                          className="sr-only"
+                        />
+                        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                          formData.dataScienceFamiliarity === value
+                            ? 'bg-blue-600 border-blue-600 text-white scale-110 shadow-lg'
+                            : 'border-gray-300 text-gray-400 hover:border-blue-400 hover:text-blue-600'
+                        }`}>
+                          <span className="text-xs md:text-sm font-bold">{value}</span>
+                        </div>
+                      </label>
+                    ))}
                   </div>
-                  <span className="text-xs md:text-sm text-gray-500 font-medium">Very familiar</span>
-                  <div className="bg-blue-100 px-2 md:px-3 py-1 rounded-full">
-                    <span className="text-xs md:text-sm font-bold text-blue-700">{formData.dataScienceFamiliarity}</span>
-                  </div>
+                  <span className="text-xs text-gray-500 font-medium">Extremely familiar</span>
                 </div>
               </div>
 
@@ -229,25 +234,30 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
                 <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2 md:mb-3">
                   Rate your experience with AI tools (ChatGPT, etc.)
                 </label>
-                <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                  <span className="text-xs md:text-sm text-gray-500 font-medium">No experience</span>
-                  <div className="flex-1 relative">
-                    <input
-                      type="range"
-                      min="1"
-                      max="7"
-                      value={formData.aiExperience}
-                      onChange={(e) => handleInputChange('aiExperience', parseInt(e.target.value))}
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                    />
-                    <div className="flex justify-between text-xs text-gray-400 mt-1">
-                      {[1,2,3,4,5,6,7].map(n => <span key={n}>{n}</span>)}
-                    </div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+                  <span className="text-xs text-gray-500 font-medium">No experience</span>
+                  <div className="flex justify-center space-x-1 md:space-x-2">
+                    {[1, 2, 3, 4, 5].map(value => (
+                      <label key={value} className="flex flex-col items-center cursor-pointer group">
+                        <input
+                          type="radio"
+                          name="aiExperience"
+                          value={value}
+                          checked={formData.aiExperience === value}
+                          onChange={(e) => handleInputChange('aiExperience', parseInt(e.target.value))}
+                          className="sr-only"
+                        />
+                        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                          formData.aiExperience === value
+                            ? 'bg-blue-600 border-blue-600 text-white scale-110 shadow-lg'
+                            : 'border-gray-300 text-gray-400 hover:border-blue-400 hover:text-blue-600'
+                        }`}>
+                          <span className="text-xs md:text-sm font-bold">{value}</span>
+                        </div>
+                      </label>
+                    ))}
                   </div>
-                  <span className="text-xs md:text-sm text-gray-500 font-medium">Very experienced</span>
-                  <div className="bg-blue-100 px-2 md:px-3 py-1 rounded-full">
-                    <span className="text-xs md:text-sm font-bold text-blue-700">{formData.aiExperience}</span>
-                  </div>
+                  <span className="text-xs text-gray-500 font-medium">Extensive experience</span>
                 </div>
               </div>
 

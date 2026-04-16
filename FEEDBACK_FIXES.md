@@ -40,10 +40,56 @@
 **Issue:** The ranking system didn't allow selecting the same number across different conditions
 **Fix:**
 - Changed from unique ranking system (1-4, each used once) to independent rating system
-- Now each condition can be rated 1-4 independently
+- Now each condition can be rated 1-5 independently (changed from 1-4 to 1-5 for consistency)
 - Multiple conditions can receive the same rating (e.g., two conditions can both be rated "2")
 - Updated UI labels from "Rank" to "Rate"
 - Changed validation to check that all conditions are rated, not that rankings are unique
+
+#### ✅ 5. **RATING SCALE STANDARDIZATION - MAJOR UPDATE**
+**Issue:** Inconsistent rating scales throughout the application (mix of 1-4, 1-5, 1-7 scales with inconsistent directions)
+**Feedback:** "The measure of evaluation should be consistent across board. If one is going to be the strongest and five the strongest, the weakest, or five the strongest, one the weakest, it should be consistent."
+
+**Comprehensive Fix:**
+
+**All scales now use consistent 5-point Likert scales with 1=Lowest/Worst, 5=Highest/Best**
+
+**PreStudySurvey.js:**
+- Data Science Familiarity: 7-point slider → 5-point radio buttons
+  - 1 = "Not at all familiar", 5 = "Extremely familiar"
+- AI Experience: 7-point slider → 5-point radio buttons
+  - 1 = "No experience", 5 = "Extensive experience"
+- Default changed from 4 to 3 (middle of 5-point scale)
+
+**PostTaskQuestionnaire.js:**
+- Agency Questions (6 items): 7-point → 5-point
+  - 1 = "Strongly Disagree", 5 = "Strongly Agree"
+- AI Dependence: 7-point → 5-point
+  - 1 = "Not at all", 5 = "Completely"
+- Cognitive Load (3 items): 7-point → 5-point
+  - 1 = "Very Low", 5 = "Very High"
+- Default changed from 4 to 3 (middle of 5-point scale)
+
+**StandardizedPostTaskQuestionnaire.js:**
+- Same changes as PostTaskQuestionnaire.js
+- All 7-point scales → 5-point scales
+- Default changed from 4 to 3
+
+**PostStudySurvey.js:**
+- Condition Ratings: 1-4 → 1-5
+  - 1 = "Strongly Prefer", 5 = "Strongly Do Not Prefer"
+  - Added neutral middle option (3 = "Neutral")
+- Learning Rating: 7-point → 5-point
+  - 1 = "Nothing", 5 = "A great deal"
+- Usefulness Rating: 7-point → 5-point
+  - 1 = "Not at all useful", 5 = "Extremely useful"
+- Default changed from 4 to 3 (middle of 5-point scale)
+
+**Consistency Achieved:**
+- ✅ All scales are now 5-point (1-5)
+- ✅ All scales use 1 = Lowest/Worst, 5 = Highest/Best
+- ✅ All scales use radio buttons (no more sliders)
+- ✅ All scales default to 3 (neutral middle)
+- ✅ Clear, consistent labels across all surveys
 
 ### Remaining Issues to Consider
 
@@ -111,8 +157,33 @@ The 4-point scale for condition preferences is intentional and different from th
 2. `client/src/components/PreStudySurvey.js`
    - Made age field optional
    - Updated validation logic
+   - **SCALE STANDARDIZATION:**
+     - Changed from 7-point sliders to 5-point radio buttons
+     - Data Science Familiarity: 1-7 → 1-5
+     - AI Experience: 1-7 → 1-5
+     - Default value: 4 → 3
 
-3. `client/src/components/PostStudySurvey.js`
+3. `client/src/components/PostTaskQuestionnaire.js`
+   - **SCALE STANDARDIZATION:**
+     - Agency questions: 7-point → 5-point
+     - AI Dependence: 7-point → 5-point
+     - Cognitive Load: 7-point → 5-point
+     - Default values: 4 → 3
+
+4. `client/src/components/StandardizedPostTaskQuestionnaire.js`
+   - **SCALE STANDARDIZATION:**
+     - Agency questions: 7-point → 5-point
+     - AI Dependence: 7-point → 5-point
+     - Cognitive Load: 7-point → 5-point
+     - Default values: 4 → 3
+
+5. `client/src/components/PostStudySurvey.js`
    - Changed from ranking to rating system
    - Updated validation to allow duplicate ratings
    - Updated UI labels and descriptions
+   - **SCALE STANDARDIZATION:**
+     - Condition ratings: 1-4 → 1-5
+     - Learning rating: 7-point → 5-point
+     - Usefulness rating: 7-point → 5-point
+     - Default values: 4 → 3
+     - Updated rating labels for consistency

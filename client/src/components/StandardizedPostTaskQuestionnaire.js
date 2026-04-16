@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 const StandardizedPostTaskQuestionnaire = ({ condition, taskNumber, onComplete, isTransferTask = false }) => {
   const [responses, setResponses] = useState({
-    agency: [4, 4, 4, 4, 4, 4], // 6-item scale, default to middle
-    dependence: 4, // Only for AI-assisted tasks
-    cognitiveLoad: [4, 4, 4] // 3-item scale
+    agency: [3, 3, 3, 3, 3, 3], // 6-item scale, default to middle (3 of 5-point scale)
+    dependence: 3, // Only for AI-assisted tasks
+    cognitiveLoad: [3, 3, 3] // 3-item scale, default to middle
   });
 
   const [errors, setErrors] = useState({});
@@ -152,7 +152,7 @@ const StandardizedPostTaskQuestionnaire = ({ condition, taskNumber, onComplete, 
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-            {/* Agency Scale - Consistent 7-point scale */}
+            {/* Agency Scale - Consistent 5-point scale */}
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl md:rounded-2xl p-4 md:p-6 border border-blue-100">
               <div className="flex items-center mb-4 md:mb-6">
                 <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-600 rounded-lg md:rounded-xl flex items-center justify-center mr-2 md:mr-3">
@@ -178,7 +178,7 @@ const StandardizedPostTaskQuestionnaire = ({ condition, taskNumber, onComplete, 
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                       <span className="text-xs text-gray-500 font-medium">Strongly Disagree</span>
                       <div className="flex justify-center space-x-1 md:space-x-2">
-                        {[1, 2, 3, 4, 5, 6, 7].map(value => (
+                        {[1, 2, 3, 4, 5].map(value => (
                           <label key={value} className="flex flex-col items-center cursor-pointer group">
                             <input
                               type="radio"
@@ -231,7 +231,7 @@ const StandardizedPostTaskQuestionnaire = ({ condition, taskNumber, onComplete, 
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                     <span className="text-xs text-gray-500 font-medium">Not at all</span>
                     <div className="flex justify-center space-x-1 md:space-x-2">
-                      {[1, 2, 3, 4, 5, 6, 7].map(value => (
+                      {[1, 2, 3, 4, 5].map(value => (
                         <label key={value} className="flex flex-col items-center cursor-pointer group">
                           <input
                             type="radio"
@@ -290,7 +290,7 @@ const StandardizedPostTaskQuestionnaire = ({ condition, taskNumber, onComplete, 
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                       <span className="text-xs text-gray-500 font-medium">Very Low</span>
                       <div className="flex justify-center space-x-1 md:space-x-2">
-                        {[1, 2, 3, 4, 5, 6, 7].map(value => (
+                        {[1, 2, 3, 4, 5].map(value => (
                           <label key={value} className="flex flex-col items-center cursor-pointer group">
                             <input
                               type="radio"
