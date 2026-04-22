@@ -131,6 +131,72 @@ Format your response as a simple list with each suggestion on a new line startin
   }
 });
 
+// Refine user's own idea
+router.post('/refine', async (req, res) => {
+  try {
+    const { taskId, userIdea, participantId } = req.body;
+    
+    if (!datasets[taskId]) {
+      return res.status(400).json({ error: 'Invalid task ID' });
+    }
+    
+    if (!userIdea || userIdea.trim().length === 0) {
+      return res.status(400).json({ error: 'No idea provided to refine' });
+    }
+    
+    const dataset = datasets[taskId];
+    
+    const prompt = `You are helping a data science student refine their research question or project idea.
+
+Dataset: ${dataset.title}
+Description: ${dataset.description}
+Available variables: ${dataset.variables.join(', ')}
+
+Student's original idea:
+"${userIdea}"
+
+Your task is to refine and improve this idea while keeping the core concept intact. Make it:
+1. More specific and actionable
+2. Better phrased and clearer
+3. More aligned with the dataset's capabilities
+
+Provide ONE refined version that improves their original idea. Keep their voice and intent, just make it better.
+
+Return ONLY the refined idea text, nothing else.`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant for data science education. Refine student ideas while preserving their original intent and giving them ownership."
+        },
+        {
+          role: "user", 
+          content: prompt
+        }
+      ],
+      max_tokens: 150,
+      temperature: 0.7,
+    });
+
+    const refinedIdea = completion.choices[0].message.content.trim();
+
+    res.json({
+      refinedIdea,
+      originalIdea: userIdea,
+      success: true
+    });
+
+  } catch (error) {
+    console.error('Error refining idea:', error);
+    res.status(500).json({ 
+      error: 'Failed to refine idea',
+      message: 'Please try again or continue with your original idea.'
+    });
+  }
+});
+
 // Get dataset information
 router.get('/datasets/:taskId', (req, res) => {
   const taskId = parseInt(req.params.taskId);

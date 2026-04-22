@@ -23,6 +23,10 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
   const [lastActivityTime, setLastActivityTime] = useState(Date.now());
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [isRefining, setIsRefining] = useState(false);
+  const [showRefinedIdea, setShowRefinedIdea] = useState(false);
+  const [refinedIdea, setRefinedIdea] = useState('');
+  const [originalIdeaBeforeRefine, setOriginalIdeaBeforeRefine] = useState('');
 
   const timerRef = useRef(null);
   const activityTimerRef = useRef(null);
@@ -120,6 +124,55 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
     
     generateAiSuggestions(isAutoTrigger);
   }, [logInteraction, generateAiSuggestions]);
+
+  const refineUserIdea = useCallback(async () => {
+    if (!currentIdea.trim() || isRefining) return;
+    
+    setIsRefining(true);
+    setOriginalIdeaBeforeRefine(currentIdea);
+    
+    try {
+      const response = await axios.post(`${API_BASE}/ai/refine`, {
+        taskId: condition.taskId,
+        userIdea: currentIdea.trim(),
+        participantId
+      });
+
+      setRefinedIdea(response.data.refinedIdea);
+      setShowRefinedIdea(true);
+      
+      logInteraction('idea_refinement_requested', { 
+        originalIdea: currentIdea.trim(),
+        refinedIdea: response.data.refinedIdea
+      });
+    } catch (error) {
+      console.error('Error refining idea:', error);
+      alert('Failed to refine idea. Please try again or continue with your original idea.');
+    } finally {
+      setIsRefining(false);
+    }
+  }, [currentIdea, isRefining, condition.taskId, participantId, logInteraction]);
+
+  const acceptRefinedIdea = useCallback(() => {
+    setCurrentIdea(refinedIdea);
+    setShowRefinedIdea(false);
+    setLastActivityTime(Date.now());
+    
+    logInteraction('refined_idea_accepted', { 
+      originalIdea: originalIdeaBeforeRefine,
+      refinedIdea: refinedIdea
+    });
+  }, [refinedIdea, originalIdeaBeforeRefine, logInteraction]);
+
+  const rejectRefinedIdea = useCallback(() => {
+    setShowRefinedIdea(false);
+    setRefinedIdea('');
+    
+    logInteraction('refined_idea_rejected', { 
+      originalIdea: originalIdeaBeforeRefine,
+      refinedIdea: refinedIdea
+    });
+  }, [originalIdeaBeforeRefine, refinedIdea, logInteraction]);
 
   const completeTask = useCallback(() => {
     if (taskCompleted) return;
@@ -435,7 +488,12 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
                       Idea {index + 1}
                     </span>
                     <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded-lg w-fit">
-                      {new Date(idea.timestamp).toLocaleTimeString()}
+                      {new Date(idea.timestamp).toLocaleTimeString('de-DE', { 
+                        timeZone: 'Europe/Berlin',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                      })}
                     </span>
                   </div>
                   <p className="text-xs md:text-sm lg:text-base text-slate-700 leading-relaxed">{idea.content}</p>
@@ -469,13 +527,25 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
                 rows={3}
                 disabled={taskCompleted}
               />
-              <button
-                onClick={handleIdeaSubmit}
-                disabled={!currentIdea.trim() || taskCompleted}
-                className="w-full bg-emerald-600 text-white py-3 md:py-4 rounded-lg md:rounded-xl hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm md:text-base lg:text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
-              >
-                Submit Idea
-              </button>
+              <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
+                <button
+                  onClick={handleIdeaSubmit}
+                  disabled={!currentIdea.trim() || taskCompleted}
+                  className="flex-1 bg-emerald-600 text-white py-3 md:py-4 rounded-lg md:rounded-xl hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm md:text-base lg:text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  Submit Idea
+                </button>
+                <button
+                  onClick={refineUserIdea}
+                  disabled={!currentIdea.trim() || taskCompleted || isRefining}
+                  className="flex-1 sm:flex-initial sm:px-6 bg-purple-600 text-white py-3 md:py-4 rounded-lg md:rounded-xl hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-sm md:text-base lg:text-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+                >
+                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  <span>{isRefining ? 'Refining...' : 'Refine My Idea'}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -593,6 +663,57 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Refined Idea Modal - Mobile Optimized */}
+      {showRefinedIdea && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg md:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-4 md:p-6">
+              <div className="flex items-center space-x-2 md:space-x-3 mb-4 md:mb-6">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-purple-100 rounded-lg md:rounded-xl flex items-center justify-center">
+                  <svg className="w-4 h-4 md:w-5 md:h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg md:text-xl font-semibold text-slate-800">AI Refined Your Idea</h3>
+              </div>
+              
+              <div className="space-y-4 md:space-y-6">
+                <div className="bg-slate-50 rounded-lg md:rounded-xl p-3 md:p-4 border border-slate-200">
+                  <p className="text-xs md:text-sm text-slate-500 mb-2 font-medium">Your Original:</p>
+                  <p className="text-sm md:text-base text-slate-700 leading-relaxed">{originalIdeaBeforeRefine}</p>
+                </div>
+                
+                <div className="bg-purple-50 rounded-lg md:rounded-xl p-3 md:p-4 border-2 border-purple-300">
+                  <p className="text-xs md:text-sm text-purple-700 mb-2 font-medium">AI Refined Version:</p>
+                  <p className="text-sm md:text-base text-slate-800 leading-relaxed font-medium">{refinedIdea}</p>
+                </div>
+                
+                <div className="bg-blue-50 rounded-lg md:rounded-xl p-3 md:p-4 border border-blue-200">
+                  <p className="text-xs md:text-sm text-blue-800">
+                    <span className="font-semibold">Tip:</span> The AI has improved your idea while keeping your core concept. You can accept it, or keep your original version.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-2 md:gap-3 mt-4 md:mt-6">
+                <button
+                  onClick={acceptRefinedIdea}
+                  className="flex-1 bg-purple-600 text-white px-4 md:px-6 py-3 md:py-4 rounded-lg md:rounded-xl hover:bg-purple-700 font-semibold text-sm md:text-base transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                  Use Refined Version
+                </button>
+                <button
+                  onClick={rejectRefinedIdea}
+                  className="flex-1 bg-slate-400 text-white px-4 md:px-6 py-3 md:py-4 rounded-lg md:rounded-xl hover:bg-slate-500 font-semibold text-sm md:text-base transition-all duration-200"
+                >
+                  Keep My Original
+                </button>
+              </div>
             </div>
           </div>
         </div>
