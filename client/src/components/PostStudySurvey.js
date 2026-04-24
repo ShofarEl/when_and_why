@@ -7,9 +7,9 @@ const API_BASE = process.env.NODE_ENV === 'production'
 
 const PostStudySurvey = ({ participantId, onComplete }) => {
   const [responses, setResponses] = useState({
-    conditionRatings: [3, 3, 3, 3], // Changed to 5-point scale, default to middle (3)
-    learningRating: 3, // Changed from 7-point to 5-point, default to middle
-    usefulnessRating: 3, // Changed from 7-point to 5-point, default to middle
+    conditionRatings: [null, null, null, null], // No default - force deliberate selection
+    learningRating: null, // No default - force deliberate selection
+    usefulnessRating: null, // No default - force deliberate selection
     feedback: ''
   });
 

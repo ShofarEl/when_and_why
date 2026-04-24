@@ -10,8 +10,8 @@ const PreStudySurvey = ({ participantId, onComplete }) => {
     age: '',
     academicLevel: '',
     major: '',
-    dataScienceFamiliarity: 3, // Changed default from 4 to 3 (middle of 5-point scale)
-    aiExperience: 3, // Changed default from 4 to 3 (middle of 5-point scale)
+    dataScienceFamiliarity: null, // No default - force deliberate selection
+    aiExperience: null, // No default - force deliberate selection
     priorCourses: []
   });
 

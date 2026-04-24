@@ -614,8 +614,16 @@ const ExperimentalTask = ({ participantId, condition, taskNumber, totalTasks, on
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <p className="text-slate-500 text-xs md:text-base mb-2">Click "Get AI Help" for suggestions</p>
-                <p className="text-slate-400 text-xs md:text-sm">Or wait 60 seconds after inactivity</p>
+                <p className="text-slate-700 text-sm md:text-base mb-3 font-semibold">Need AI Help?</p>
+                <p className="text-slate-500 text-xs md:text-sm mb-4 px-4">Click the blue "Get AI Help" button at the top of the page to receive AI-generated suggestions</p>
+                <div className="bg-blue-50 rounded-lg p-3 mx-4 border border-blue-100">
+                  <p className="text-xs text-blue-700">
+                    <svg className="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Or wait 60 seconds after inactivity for automatic suggestions
+                  </p>
+                </div>
               </div>
             )}
           </div>

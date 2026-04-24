@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
   const [responses, setResponses] = useState({
-    agency: [3, 3, 3, 3, 3, 3], // 6-item scale, default to middle (3 of 5-point scale)
-    dependence: 3,
-    cognitiveLoad: [3, 3, 3] // 3-item scale, default to middle
+    agency: [null, null, null, null, null, null], // 6-item scale, no default - force selection
+    dependence: null,
+    cognitiveLoad: [null, null, null] // 3-item scale, no default - force selection
   });
 
   const [errors, setErrors] = useState({});

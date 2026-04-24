@@ -105,16 +105,127 @@ function App() {
           <div className="max-w-5xl mx-auto px-2 sm:px-4">
             <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 lg:p-8 shadow-lg border border-slate-200">
               <div className="text-center mb-6 md:mb-8">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 md:w-10 md:h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
                 <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-800 mb-2 md:mb-4 px-2">Welcome to iNSIGHT AI</h2>
                 <p className="text-sm md:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto px-4">
                   You're about to participate in cutting-edge research on AI-assisted creativity in data science
                 </p>
               </div>
+
+              {/* Task Instructions */}
+              <div className="space-y-4 md:space-y-6 mb-6 md:mb-8">
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 md:p-6 border border-blue-200">
+                  <div className="flex items-start space-x-3 md:space-x-4">
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-sm md:text-base">1</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-base md:text-lg font-bold text-slate-800 mb-2">What You'll Do</h3>
+                      <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
+                        You'll complete <strong>4 tasks (10 minutes each)</strong> where you'll generate creative research questions and project ideas for different datasets. Each task presents a unique dataset from domains like healthcare, education, or e-commerce.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl p-4 md:p-6 border border-emerald-200">
+                  <div className="flex items-start space-x-3 md:space-x-4">
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-sm md:text-base">2</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-base md:text-lg font-bold text-slate-800 mb-2">Your Ideas</h3>
+                      <p className="text-xs md:text-sm text-slate-600 leading-relaxed mb-3">
+                        Generate as many creative research questions as you can. Each idea should be:
+                      </p>
+                      <ul className="space-y-2 text-xs md:text-sm text-slate-600">
+                        <li className="flex items-start">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 text-emerald-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span><strong>1-3 sentences</strong> describing a research question or project idea</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 text-emerald-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span><strong>Specific and actionable</strong> - what would you investigate?</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 text-emerald-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span><strong>Related to the dataset</strong> - use the available variables</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 md:p-6 border border-purple-200">
+                  <div className="flex items-start space-x-3 md:space-x-4">
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-sm md:text-base">3</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-base md:text-lg font-bold text-slate-800 mb-2">AI Assistance</h3>
+                      <p className="text-xs md:text-sm text-slate-600 leading-relaxed">
+                        You'll experience different types of AI assistance across tasks. The AI can suggest ideas or help refine your own ideas. <strong>You're always in control</strong> - you can use AI suggestions, modify them, or create entirely your own ideas.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-4 md:p-6 border border-amber-200">
+                  <div className="flex items-start space-x-3 md:space-x-4">
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-white font-bold text-sm md:text-base">4</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-base md:text-lg font-bold text-slate-800 mb-2">Important Tips</h3>
+                      <ul className="space-y-2 text-xs md:text-sm text-slate-600">
+                        <li className="flex items-start">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 text-amber-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                          <span>Focus on <strong>quality and creativity</strong>, not just quantity</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 text-amber-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                          <span>Think about <strong>interesting patterns, relationships, or insights</strong></span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 text-amber-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                          <span>Use the <strong>"Refine My Idea"</strong> button to improve your own ideas</span>
+                        </li>
+                        <li className="flex items-start">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 text-amber-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                          <span>There are <strong>no wrong answers</strong> - be creative and explore!</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="text-center">
                 <button 
                   onClick={nextPhase}
                   className="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-slate-600 text-white font-semibold text-sm md:text-base lg:text-lg rounded-lg md:rounded-xl hover:bg-slate-700 transition-all duration-200 shadow-lg hover:shadow-xl w-full sm:w-auto"
                 >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
                   Begin Experimental Tasks
                 </button>
               </div>
