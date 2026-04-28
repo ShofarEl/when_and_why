@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 const StandardizedPostTaskQuestionnaire = ({ condition, taskNumber, onComplete, isTransferTask = false }) => {
   const [responses, setResponses] = useState({
-    agency: [3, 3, 3, 3, 3, 3], // 6-item scale, default to middle (3 of 5-point scale)
-    dependence: 3, // Only for AI-assisted tasks
-    cognitiveLoad: [3, 3, 3] // 3-item scale, default to middle
+    agency: [null, null, null, null, null, null], // 6-item scale, no default - force selection
+    dependence: null, // Only for AI-assisted tasks, no default
+    cognitiveLoad: [null, null, null] // 3-item scale, no default - force selection
   });
 
   const [errors, setErrors] = useState({});
