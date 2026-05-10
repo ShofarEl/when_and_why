@@ -5,7 +5,8 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
-    "build": "echo 'No build step required for backend'"
+    "build": "echo 'No build step required for backend'",
+    "export": "node server/scripts/exportToCSV.js"
   },
   "engines": {
     "node": ">=16.0.0"
