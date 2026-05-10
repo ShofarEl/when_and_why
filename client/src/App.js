@@ -15,7 +15,10 @@ const API_BASE = process.env.NODE_ENV === 'production'
 
 function App() {
   const [currentPhase, setCurrentPhase] = useState('consent');
-  const [participantId, setParticipantId] = useState(null);
+  const [participantId, setParticipantId] = useState(() => {
+    // Check localStorage for existing participant ID
+    return localStorage.getItem('participantId') || null;
+  });
   const [conditionOrder, setConditionOrder] = useState([]);
   const [currentConditionIndex, setCurrentConditionIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,9 +38,36 @@ function App() {
     setIsLoading(true);
     setLoadingMessage('Creating participant...');
     try {
+      // Check if we have a stored participant ID
+      const storedId = localStorage.getItem('participantId');
+      
+      if (storedId) {
+        // Try to login with existing ID
+        try {
+          const loginResponse = await axios.post(`${API_BASE}/participants/login`, {
+            participantId: storedId
+          });
+          
+          if (loginResponse.data.success) {
+            setParticipantId(loginResponse.data.participantId);
+            setConditionOrder(loginResponse.data.conditionOrder);
+            setIsLoading(false);
+            return loginResponse.data.participantId;
+          }
+        } catch (loginError) {
+          console.log('Stored ID not found, creating new participant');
+          localStorage.removeItem('participantId');
+        }
+      }
+      
+      // Create new participant
       const response = await axios.post(`${API_BASE}/participants/create`);
       setParticipantId(response.data.participantId);
       setConditionOrder(response.data.conditionOrder);
+      
+      // Store participant ID in localStorage
+      localStorage.setItem('participantId', response.data.participantId);
+      
       setIsLoading(false);
       return response.data.participantId;
     } catch (error) {

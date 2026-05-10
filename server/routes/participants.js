@@ -27,10 +27,27 @@ function generateLatinSquare() {
   );
 }
 
-// Create new participant
+// Create new participant or login existing
 router.post('/create', async (req, res) => {
   try {
-    // Generate participant ID
+    // Check if participant ID is provided (returning user)
+    if (req.body.participantId) {
+      const existingParticipant = await Participant.findOne({ 
+        participantId: req.body.participantId 
+      });
+      
+      if (existingParticipant) {
+        // Existing user logging back in
+        return res.json({
+          participantId: existingParticipant.participantId,
+          conditionOrder: existingParticipant.conditionOrder,
+          success: true,
+          returning: true
+        });
+      }
+    }
+    
+    // Generate new participant ID
     const count = await Participant.countDocuments();
     const participantId = `P${String(count + 1).padStart(3, '0')}`;
     
@@ -50,11 +67,51 @@ router.post('/create', async (req, res) => {
     res.json({
       participantId,
       conditionOrder,
-      success: true
+      success: true,
+      returning: false
     });
   } catch (error) {
     console.error('Error creating participant:', error);
     res.status(500).json({ error: 'Failed to create participant' });
+  }
+});
+
+// Login existing participant
+router.post('/login', async (req, res) => {
+  try {
+    const { participantId } = req.body;
+    
+    if (!participantId) {
+      return res.status(400).json({ 
+        error: 'Participant ID is required',
+        success: false 
+      });
+    }
+    
+    const participant = await Participant.findOne({ participantId });
+    
+    if (!participant) {
+      return res.status(404).json({ 
+        error: 'Participant not found',
+        success: false 
+      });
+    }
+    
+    res.json({
+      participantId: participant.participantId,
+      conditionOrder: participant.conditionOrder,
+      demographics: participant.demographics,
+      sessions: participant.sessions,
+      transferTasks: participant.transferTasks,
+      completed: participant.completed,
+      success: true
+    });
+  } catch (error) {
+    console.error('Error logging in participant:', error);
+    res.status(500).json({ 
+      error: 'Failed to login',
+      success: false 
+    });
   }
 });
 
