@@ -47,32 +47,64 @@ router.post('/create', async (req, res) => {
       }
     }
     
-    // Generate new participant ID
-    const count = await Participant.countDocuments();
-    const participantId = `P${String(count + 1).padStart(3, '0')}`;
+    // Find the highest existing participant number
+    const allParticipants = await Participant.find({}, { participantId: 1 }).lean();
+    const existingIds = new Set(allParticipants.map(p => p.participantId));
+    
+    // Find next available ID
+    let nextNumber = 1;
+    let participantId;
+    do {
+      participantId = `P${String(nextNumber).padStart(3, '0')}`;
+      nextNumber++;
+    } while (existingIds.has(participantId));
+    
+    console.log(`Creating new participant: ${participantId}`);
     
     // Assign to Latin Square group
     const latinSquares = generateLatinSquare();
+    const count = allParticipants.length;
     const groupIndex = count % 4;
     const conditionOrder = latinSquares[groupIndex];
     
-    const participant = new Participant({
-      participantId,
-      conditionOrder,
-      demographics: req.body.demographics || {}
-    });
-    
-    await participant.save();
-    
-    res.json({
-      participantId,
-      conditionOrder,
-      success: true,
-      returning: false
-    });
+    // Try to create participant, handle duplicate gracefully
+    try {
+      const participant = new Participant({
+        participantId,
+        conditionOrder,
+        demographics: req.body.demographics || {}
+      });
+      
+      await participant.save();
+      
+      res.json({
+        participantId,
+        conditionOrder,
+        success: true,
+        returning: false
+      });
+    } catch (saveError) {
+      // If duplicate key error, try to find and return existing
+      if (saveError.code === 11000) {
+        console.log(`Duplicate detected for ${participantId}, fetching existing...`);
+        const existing = await Participant.findOne({ participantId });
+        if (existing) {
+          return res.json({
+            participantId: existing.participantId,
+            conditionOrder: existing.conditionOrder,
+            success: true,
+            returning: true
+          });
+        }
+      }
+      throw saveError;
+    }
   } catch (error) {
     console.error('Error creating participant:', error);
-    res.status(500).json({ error: 'Failed to create participant' });
+    res.status(500).json({ 
+      error: 'Failed to create participant',
+      details: error.message 
+    });
   }
 });
 
