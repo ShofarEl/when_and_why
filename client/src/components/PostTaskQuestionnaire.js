@@ -179,8 +179,8 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
                     </label>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                       <span className="text-xs text-gray-500 font-medium">Strongly Disagree</span>
-                      <div className="flex justify-center space-x-1 md:space-x-2">
-                        {[1, 2, 3, 4, 5].map(value => (
+                      <div className="flex justify-center space-x-1">
+                        {[1, 2, 3, 4, 5, 6, 7].map(value => (
                           <label key={value} className="flex flex-col items-center cursor-pointer group">
                             <input
                               type="radio"
@@ -190,7 +190,7 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
                               onChange={(e) => handleAgencyChange(index, e.target.value)}
                               className="sr-only"
                             />
-                            <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                            <div className={`w-7 h-7 md:w-9 md:h-9 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
                               responses.agency[index] === value
                                 ? 'bg-blue-600 border-blue-600 text-white scale-110 shadow-lg'
                                 : 'border-gray-300 text-gray-400 hover:border-blue-400 hover:text-blue-600'
@@ -231,8 +231,8 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
                 </label>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                   <span className="text-xs text-gray-500 font-medium">Not at all</span>
-                  <div className="flex justify-center space-x-1 md:space-x-2">
-                    {[1, 2, 3, 4, 5].map(value => (
+                  <div className="flex justify-center space-x-1">
+                    {[1, 2, 3, 4, 5, 6, 7].map(value => (
                       <label key={value} className="flex flex-col items-center cursor-pointer group">
                         <input
                           type="radio"
@@ -245,7 +245,7 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
                           }))}
                           className="sr-only"
                         />
-                        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                        <div className={`w-7 h-7 md:w-9 md:h-9 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
                           responses.dependence === value
                             ? 'bg-blue-600 border-blue-600 text-white scale-110 shadow-lg'
                             : 'border-slate-300 text-slate-400 hover:border-blue-400 hover:text-blue-600'
@@ -289,8 +289,8 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
                     </label>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                       <span className="text-xs text-gray-500 font-medium">Very Low</span>
-                      <div className="flex justify-center space-x-1 md:space-x-2">
-                        {[1, 2, 3, 4, 5].map(value => (
+                      <div className="flex justify-center space-x-1">
+                        {[1, 2, 3, 4, 5, 6, 7].map(value => (
                           <label key={value} className="flex flex-col items-center cursor-pointer group">
                             <input
                               type="radio"
@@ -300,7 +300,7 @@ const PostTaskQuestionnaire = ({ condition, taskNumber, onComplete }) => {
                               onChange={(e) => handleCognitiveLoadChange(index, e.target.value)}
                               className="sr-only"
                             />
-                            <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
+                            <div className={`w-7 h-7 md:w-9 md:h-9 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
                               responses.cognitiveLoad[index] === value
                                 ? 'bg-orange-600 border-orange-600 text-white scale-110 shadow-lg'
                                 : 'border-gray-300 text-gray-400 hover:border-orange-400 hover:text-orange-600'
